@@ -10,7 +10,12 @@ function auth() {
         credentialsRequired: true,
         // isRevoked: isRevoked
     }).unless({
-        path: ["/api/user/login", "/api/user/signup", "/api/upload/image"],
+        path: [
+            "/api/user/login",
+            "/api/user/signup",
+            "/api/upload/image",
+            "/api/user/logout",
+        ],
     });
 }
 
