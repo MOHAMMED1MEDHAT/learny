@@ -4,9 +4,11 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const cors = require("cors");
 const express = require("express");
+
 const authJwt = require("./util/jwt");
 // const dateCalc = require("./util/dateCalculations");
-const errorHandler = require("./middleware/errorHandlerMw");
+const errorHandler = require("./middlewares/errorHandlerMw");
+
 const app = express();
 
 process.on("uncaughtException", (exception) => {
@@ -15,7 +17,7 @@ process.on("uncaughtException", (exception) => {
 process.on("unhandledRejection", (exception) => {
     console.log("uncaught async Exception" + exception);
 });
-
+//mongoose connection setup
 mongoose
     .connect(process.env.LOCAL_CONNECTION_STRING, {
         useNewUrlParser: true,
@@ -45,8 +47,9 @@ app.use(authJwt());
 app.use(errorHandler);
 
 //routes
-// const userRouter = require("./routes/user");
-// const authRouter = require("./routes/auth");
+const userRouter = require("./routes/user");
+const authRouter = require("./routes/auth");
+const upload = require("./routes/Upload");
 // const searchRouter = require("./routes/search");
 // const profileRouter = require("./routes/profile");
 // const notificationRouter = require("./routes/notification");
@@ -54,8 +57,9 @@ app.use(errorHandler);
 // const appointmentRouter = require("./routes/appointment");
 // const clinickRouter = require("./routes/clinick");
 
-// app.use("/api/user/signup", userRouter); //test done
-// app.use("/api/user", authRouter); //test done
+app.use("/api/user/signup", userRouter); //test done
+app.use("/api/user", authRouter); //test done
+app.use("/api/upload", upload);
 // app.use("/api/search", searchRouter); //test done
 // app.use("/api/profile", profileRouter); //test done
 // // app.use("/api/mainPage",mainPageRouter);
