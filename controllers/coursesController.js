@@ -219,23 +219,23 @@ const subscripeToCourseByCourseId = async (req, res) => {
                 courses: [coursesOfUser],
             });
             await userCourse.save();
+        } else {
+            const { courses } = await UserCourse.findOne({ userId }).exec();
+
+            courses.push(coursesOfUser);
+
+            const userCourse = await UserCourse.findOneAndUpdate(
+                { userId },
+                {
+                    courses,
+                },
+                { returnOriginal: false }
+            ).exec();
         }
-
-        const { courses } = await UserCourse.findOne({ userId }).exec();
-
-        courses.push(coursesOfUser);
-
-        const userCourse = await UserCourse.findOneAndUpdate(
-            { userId },
-            {
-                courses,
-            },
-            { returnOriginal: false }
-        ).exec();
 
         res.status(200).json({
             message: "subscriped successfully",
-            data: { course, userCourse },
+            data: { course },
         });
     } catch (err) {
         errorHandlerMw(err, req, res);
