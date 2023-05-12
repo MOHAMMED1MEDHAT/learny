@@ -14,6 +14,7 @@ function auth() {
             "/api/v1/user/login",
             "/api/v1/user/signup",
             "/api/v1/upload/image",
+            "/api/v1/testmonial",
             "/api/v1/user/logout",
         ],
     });
