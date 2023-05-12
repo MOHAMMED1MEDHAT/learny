@@ -12,7 +12,7 @@ const getAllTestmonials = async (req, res) => {
         const filter = req.query;
         console.log(filter);
         const testmonials = await Testmonial.find(filter).exec();
-        if (!testmonials) {
+        if (testmonials.length == 0) {
             return res
                 .status(204)
                 .json({ message: "No testmonials were added yet" });

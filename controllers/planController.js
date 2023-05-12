@@ -12,7 +12,7 @@ const getAllPlans = async (req, res) => {
         const filter = req.query;
         console.log(filter);
         const plans = await Plan.find(filter).exec();
-        if (!plans) {
+        if (plans.length == 0) {
             return res.status(204).json({ message: "No plans were added yet" });
         }
 

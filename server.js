@@ -20,7 +20,7 @@ process.on("unhandledRejection", (exception) => {
 
 //mongoose connection setup
 mongoose
-    .connect(process.env.LOCAL_CONNECTION_STRING, {
+    .connect(process.env.ATLAS_CONNECTION_STRING, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         dbName: "E-learnig",

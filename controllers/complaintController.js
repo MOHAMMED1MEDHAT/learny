@@ -12,7 +12,7 @@ const getAllComplaints = async (req, res) => {
         const filter = req.query;
         console.log(filter);
         const complaints = await Complaint.find(filter).exec();
-        if (!complaints) {
+        if (complaints.length == 0) {
             return res
                 .status(204)
                 .json({ message: "No complaints were added yet" });
@@ -37,7 +37,7 @@ const getAllComplaintsByUserId = async (req, res) => {
         );
 
         const complaints = await Complaint.find({ userId }).exec();
-        if (!complaints) {
+        if (complaints.length == 0) {
             return res
                 .status(204)
                 .json({ message: "No complaints were added yet" });
