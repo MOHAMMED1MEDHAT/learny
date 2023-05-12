@@ -76,15 +76,10 @@ const getComplaintByComplaintId = async (req, res) => {
 
 const addComplaint = async (req, res) => {
     try {
-        const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
-
-        const { emailToContact, subjectOfComplaint, message } = req.body;
+        const { name, emailToContact, subjectOfComplaint, message } = req.body;
 
         let complaint = new Complaint({
-            userId,
+            name,
             emailToContact,
             subjectOfComplaint,
             message,

@@ -4,6 +4,9 @@ const ajv = new Ajv();
 const schema = {
     type: "object",
     properties: {
+        name: {
+            type: "string",
+        },
         emailToContact: {
             type: "string",
             pattern: ".+@.+..",
@@ -15,7 +18,7 @@ const schema = {
             type: "string",
         },
     },
-    required: ["emailToContact", "subjectOfComplaint", "message"],
+    required: ["name", "emailToContact", "subjectOfComplaint", "message"],
 };
 
 module.exports = ajv.compile(schema);

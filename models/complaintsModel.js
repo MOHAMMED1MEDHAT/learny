@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const complaintSchema = mongoose.Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
+    name: {
+        type: String,
         ref: "user",
         required: true,
     },
