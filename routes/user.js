@@ -1,5 +1,5 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
-const validator = require("../middleWares/userValidatorMw");
+const validator = require("../middlewares/userValidatorMw");
 const User = require("../models/userModel");
 
 const bcrypt = require("bcrypt");
