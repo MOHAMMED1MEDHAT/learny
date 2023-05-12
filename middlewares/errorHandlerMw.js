@@ -3,6 +3,6 @@ module.exports = (err, req, res, next) => {
         next();
     } else {
         // const errMessage = err.inner.message;
-        return res.status(500).json({ message: "Internal server error", err });
+        return res.status(500).json({ message: "Internal server error ", err });
     }
 };

@@ -47,6 +47,11 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    subscription: {
+        type: String,
+        default: "FREE",
+        required: true,
+    },
     isAdmin: {
         type: Boolean,
         default: false,

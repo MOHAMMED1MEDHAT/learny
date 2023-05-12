@@ -11,10 +11,10 @@ function auth() {
         // isRevoked: isRevoked
     }).unless({
         path: [
-            "/api/user/login",
-            "/api/user/signup",
-            "/api/upload/image",
-            "/api/user/logout",
+            "/api/v1/user/login",
+            "/api/v1/user/signup",
+            "/api/v1/upload/image",
+            "/api/v1/user/logout",
         ],
     });
 }

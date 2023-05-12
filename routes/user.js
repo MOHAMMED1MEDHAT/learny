@@ -6,8 +6,6 @@ const bcrypt = require("bcrypt");
 const config = require("config");
 const router = require("express").Router();
 
-const jwtSCRT = config.get("env_var.jwtScreteKey");
-
 router.post("/", validator, async (req, res) => {
     try {
         const { name, email, password, phone, imageUrl, gender, address } =
