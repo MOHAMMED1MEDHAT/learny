@@ -11,7 +11,11 @@ const getAllTestmonials = async (req, res) => {
     try {
         const filter = req.query;
         console.log(filter);
-        const testmonials = await Testmonial.find(filter).exec();
+        const testmonials = await Testmonial.find(filter)
+            .populate({
+                path: "userId",
+            })
+            .exec();
         if (testmonials.length == 0) {
             return res
                 .status(204)
