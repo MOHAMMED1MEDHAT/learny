@@ -14,6 +14,7 @@ const getAllTestmonials = async (req, res) => {
         const testmonials = await Testmonial.find(filter)
             .populate({
                 path: "userId",
+                select: "name",
             })
             .exec();
         if (testmonials.length == 0) {
