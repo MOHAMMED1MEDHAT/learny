@@ -1,44 +1,17 @@
-const errorHandlerMw = require("../middlewares/errorHandlerMw");
+const User = require("../controllers/userController");
 const validator = require("../middlewares/userValidatorMw");
-const User = require("../models/userModel");
+const authValidator = require("../middlewares/authValidatorMw");
 
-const bcrypt = require("bcrypt");
-const config = require("config");
 const router = require("express").Router();
 
-router.post("/", validator, async (req, res) => {
-    try {
-        const { name, email, password, phone, imageUrl, gender, address } =
-            req.body;
+router.post("/signup", validator, User.signUpController);
 
-        const used = await User.findOne({ email: req.body.email }).exec();
-        if (used) {
-            return res.status(200).json({ message: "user already registered" });
-        }
+router.post("/resetPasswordRequest", User.resetPasswordRequestController);
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+router.post("/passwordReset", User.resetPasswordController);
 
-        let user = new User({
-            name,
-            email,
-            password: hashedPassword,
-            phone,
-            imageUrl,
-            gender,
-            address,
-        });
-        await user.save();
+router.post("/login", authValidator, User.login);
 
-        const token = user.getAuthToken(user._id, user.isAdmin);
-
-        res.cookie("x-auth-token", token, { httpOnly: true });
-
-        res.status(200).json({ message: "user was added successfully", user });
-    } catch (err) {
-        console.log(err);
-        errorHandlerMw(err);
-    }
-});
+router.get("/logout", User.logout);
 
 module.exports = router;

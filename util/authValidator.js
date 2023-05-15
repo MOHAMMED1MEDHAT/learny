@@ -10,7 +10,6 @@ const schema = {
         },
         password: {
             type: "string",
-            minLength: 5,
         },
     },
     required: ["email", "password"],

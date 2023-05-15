@@ -11,12 +11,12 @@ const errorHandler = require("./middlewares/errorHandlerMw");
 const app = express();
 
 //FIXME: ENABLE ON DEPLOYMENT
-process.on("uncaughtException", (exception) => {
-    console.log("uncaught Exception" + exception);
-});
-process.on("unhandledRejection", (exception) => {
-    console.log("uncaught async Exception" + exception);
-});
+// process.on("uncaughtException", (exception) => {
+//     console.log("uncaught Exception" + exception);
+// });
+// process.on("unhandledRejection", (exception) => {
+//     console.log("uncaught async Exception" + exception);
+// });
 
 //mongoose connection setup
 mongoose
@@ -43,13 +43,13 @@ app.use(cors());
 app.options("*", cors);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(morgan("tiny"));
+app.use(morgan("dev"));
 app.use(authJwt());
 app.use(errorHandler);
 
 //routes
 const userRouter = require("./routes/user");
-const authRouter = require("./routes/auth");
+// const authRouter = require("./routes/auth");
 const upload = require("./routes/Upload");
 const trackRouter = require("./routes/track");
 const complaintRouter = require("./routes/complaints");
@@ -58,8 +58,8 @@ const userCoursesRouter = require("./routes/userCourses");
 const testmonialRouter = require("./routes/testmonials");
 const planRouter = require("./routes/plans");
 
-app.use("/api/v1/user/signup", userRouter); //test done
-app.use("/api/v1/user", authRouter); //test done
+app.use("/api/v1/user", userRouter); //test done
+// app.use("/api/v1/user", authRouter); //test done
 app.use("/api/v1/upload", upload); //test done
 app.use("/api/v1/track", trackRouter); //test
 app.use("/api/v1/complaint", complaintRouter); //test
