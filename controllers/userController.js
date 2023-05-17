@@ -13,7 +13,7 @@ const signUpController = async (req, res) => {
 
         const used = await User.findOne({ email: req.body.email }).exec();
         if (used) {
-            return res.status(200).json({ message: "user already registered" });
+            return res.status(409).json({ message: "user already registered" });
         }
 
         const salt = await bcrypt.genSalt(process.env.BCRYPT_SALT * 1);

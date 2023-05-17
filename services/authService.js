@@ -10,9 +10,7 @@ const requestPasswordReset = async (email) => {
     try {
         const user = await User.findOne({ email });
 
-        if (!user) {
-            return res.status(400).json({ message: "User does not exist" });
-        }
+        if (!user) throw new Error("User does not exist");
         let token = await Token.findOne({ userId: user._id });
         if (token) await token.deleteOne();
         let resetToken = crypto.randomBytes(32).toString("hex");
