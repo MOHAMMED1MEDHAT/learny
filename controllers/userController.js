@@ -34,7 +34,11 @@ const signUpController = async (req, res) => {
 
         res.cookie("x-auth-token", token, { httpOnly: true });
 
-        res.status(200).json({ message: "user was added successfully", user });
+        res.status(200).json({
+            message: "user was added successfully",
+            user,
+            token: token,
+        });
     } catch (err) {
         console.log(err);
         errorHandlerMw(err);
@@ -84,7 +88,10 @@ const login = async (req, res) => {
 
         const token = user.getAuthToken(user._id, user.isAdmin);
         res.cookie("x-auth-token", token, { httpOnly: true });
-        res.status(200).json({ message: "user signed in successfully" });
+        res.status(200).json({
+            message: "user signed in successfully",
+            token: token,
+        });
     } catch (err) {
         errorHandlerMw(err);
     }
