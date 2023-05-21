@@ -83,7 +83,8 @@ const login = async (req, res) => {
         }
 
         const token = user.getAuthToken(user._id, user.isAdmin);
-        res.cookie("x-auth-token", token);
+        res.cookie("x-auth-token", token, { httpOnly: true });
+        res.setHeader("x-auth-token", token);
         res.status(200).json({ message: "user signed in successfully" });
     } catch (err) {
         errorHandlerMw(err);
