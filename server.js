@@ -51,6 +51,7 @@ app.use(errorHandler);
 const userRouter = require("./routes/user");
 // const authRouter = require("./routes/auth");
 const upload = require("./routes/Upload");
+const profile = require("./routes/profile");
 const trackRouter = require("./routes/track");
 const complaintRouter = require("./routes/complaints");
 const coursesRouter = require("./routes/courses");
@@ -61,6 +62,7 @@ const planRouter = require("./routes/plans");
 app.use("/api/v1/user", userRouter); //test done
 // app.use("/api/v1/user", authRouter); //test done
 app.use("/api/v1/upload", upload); //test done
+app.use("/api/v1/profile", profile); //test done
 app.use("/api/v1/track", trackRouter); //test
 app.use("/api/v1/complaint", complaintRouter); //test
 app.use("/api/v1/course", coursesRouter); //test
