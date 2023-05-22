@@ -9,7 +9,8 @@ const jwtSCRT = config.get("env_var.jwtScreteKey");
 const getUser = async (req, res) => {
     try {
         const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
+            // req.header("Cookie").split("").slice(13).join(""),
+            req.param.id,
             jwtSCRT
         );
 
