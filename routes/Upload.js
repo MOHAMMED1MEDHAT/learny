@@ -26,7 +26,7 @@ router.post("/image", upload.single("image"), async (req, res) => {
     try {
         return res.json({ imageLink: req.file.path });
     } catch (err) {
-        errorHandlerMw(err);
+        errorHandlerMw(req, res, err);
     }
 });
 

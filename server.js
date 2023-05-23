@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 // const helmet = require("helmet");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const express = require("express");
 
 const authJwt = require("./util/jwt");
@@ -39,10 +40,16 @@ mongoose
 // });
 
 //middlewares
-app.use(cors());
-app.options("*", cors);
+app.use(
+    cors({
+        origin: true,
+        credentials: true,
+    })
+);
+// app.options("*", cors);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(authJwt());
 app.use(errorHandler);
