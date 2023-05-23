@@ -31,10 +31,7 @@ const getAllComplaints = async (req, res) => {
 //get all complaints by user id
 const getAllComplaintsByUserId = async (req, res) => {
     try {
-        const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         const complaints = await Complaint.find({ userId }).exec();
         if (complaints.length == 0) {
