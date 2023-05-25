@@ -159,8 +159,8 @@ const deleteComplaintByComplaintId = async (req, res) => {
         });
     } catch (err) {
         console.log(req, err);
-        // errorHandlerMw(req, res, err);
-        res.send("error");
+        errorHandlerMw(req, res, err);
+        // res.send("error");
     }
 };
 
