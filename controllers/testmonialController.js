@@ -29,7 +29,8 @@ const getAllTestmonials = async (req, res) => {
             data: { testmonials },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
@@ -51,16 +52,14 @@ const getTestmonialById = async (req, res) => {
             data: { testmonial },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 const addTestmonials = async (req, res) => {
     try {
-        const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         const { description, dateOfSubmation } = req.body;
 
@@ -76,17 +75,15 @@ const addTestmonials = async (req, res) => {
             data: { testmonial },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //update testmonial by testmonial id
 const updateTestmonialById = async (req, res) => {
     try {
-        const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -113,16 +110,14 @@ const updateTestmonialById = async (req, res) => {
             data: { testmonial },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 const deleteTestmonialById = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -144,7 +139,8 @@ const deleteTestmonialById = async (req, res) => {
             data: { testmonial },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 

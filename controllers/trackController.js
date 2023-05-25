@@ -24,7 +24,8 @@ const getAllTracks = async (req, res) => {
             data: { tracks },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
@@ -58,17 +59,15 @@ const getTrackById = async (req, res) => {
 
         res.status(200).json({ message: "track found", data: { track } });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //add track
 const addTrack = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -97,17 +96,15 @@ const addTrack = async (req, res) => {
             data: { track },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //update track by id
 const updateTrackById = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -140,17 +137,15 @@ const updateTrackById = async (req, res) => {
             data: { track },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //update track courses
 const updateTrackCourses = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -178,17 +173,15 @@ const updateTrackCourses = async (req, res) => {
             data: { track },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //subscripe to track by track id
 const subscripeToTrackByTrackId = async (req, res) => {
     try {
-        const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -224,17 +217,15 @@ const subscripeToTrackByTrackId = async (req, res) => {
             data: { track },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //unsubscripe to track by track id
 const unsubscripeToTrackById = async (req, res) => {
     try {
-        const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -269,17 +260,15 @@ const unsubscripeToTrackById = async (req, res) => {
             data: { track },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //delete track by id
 const deleteTrackByTrackId = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -299,7 +288,8 @@ const deleteTrackByTrackId = async (req, res) => {
             data: { track },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 

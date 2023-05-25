@@ -8,10 +8,7 @@ const jwtSCRT = config.get("env_var.jwtScreteKey");
 //get by user id
 const getUser = async (req, res) => {
     try {
-        const token = req.header("x-auth-token");
-        // const token = req.params.id;
-        console.log("token", token);
-        const { userId } = jwt.verify(token, jwtSCRT);
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         const user = await User.findById(userId).exec();
         if (!user) {
@@ -23,6 +20,7 @@ const getUser = async (req, res) => {
             data: { user },
         });
     } catch (err) {
+        console.log(err);
         errorHandlerMw(err, req, res);
     }
 };

@@ -24,7 +24,8 @@ const getAllComplaints = async (req, res) => {
             data: { complaints },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
@@ -46,7 +47,8 @@ const getAllComplaintsByUserId = async (req, res) => {
             data: { complaints },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
@@ -67,7 +69,8 @@ const getComplaintByComplaintId = async (req, res) => {
             data: { complaint },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
@@ -88,17 +91,15 @@ const addComplaint = async (req, res) => {
             data: { complaint },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //update complaint by complaint id
 const updateComplaintByComplaintId = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -128,16 +129,14 @@ const updateComplaintByComplaintId = async (req, res) => {
             data: { complaint },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 const deleteComplaintByComplaintId = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -159,7 +158,9 @@ const deleteComplaintByComplaintId = async (req, res) => {
             data: { complaint },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        // errorHandlerMw(req, res, err);
+        res.send("error");
     }
 };
 

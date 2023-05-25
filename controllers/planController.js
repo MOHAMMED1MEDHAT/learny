@@ -22,7 +22,8 @@ const getAllPlans = async (req, res) => {
             data: { plans },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
@@ -43,16 +44,14 @@ const getPlanById = async (req, res) => {
             data: { plan },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 const addPlan = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -72,17 +71,15 @@ const addPlan = async (req, res) => {
             data: { plan },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //update plan by plan id
 const updatePlanById = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -113,16 +110,14 @@ const updatePlanById = async (req, res) => {
             data: { plan },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 const deletePlan = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -142,7 +137,8 @@ const deletePlan = async (req, res) => {
             data: { plan },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 

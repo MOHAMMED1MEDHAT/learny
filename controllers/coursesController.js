@@ -25,7 +25,8 @@ const getAllCourses = async (req, res) => {
             data: { courses },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
@@ -44,17 +45,15 @@ const getCourseByCourseId = async (req, res) => {
 
         res.status(200).json({ message: "course found", data: { course } });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //add course
 const addCourse = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -80,17 +79,15 @@ const addCourse = async (req, res) => {
             data: { course },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //update course by course id
 const updateCourseByCourseId = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -120,17 +117,15 @@ const updateCourseByCourseId = async (req, res) => {
             data: { course },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //update course links by course id
 const updateCourseLinksByCourseId = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -158,17 +153,15 @@ const updateCourseLinksByCourseId = async (req, res) => {
             data: { course },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //subscripe to course by course id
 const subscripeToCourseByCourseId = async (req, res) => {
     try {
-        const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -238,17 +231,15 @@ const subscripeToCourseByCourseId = async (req, res) => {
             data: { course },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //unsubscripe to course by course id
 const unsubscripeToCourseByCourseId = async (req, res) => {
     try {
-        const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -303,17 +294,15 @@ const unsubscripeToCourseByCourseId = async (req, res) => {
             data: { course, userCourse },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //delete course by course id
 const deleteCourseByCourseId = async (req, res) => {
     try {
-        const { isAdmin } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -333,7 +322,8 @@ const deleteCourseByCourseId = async (req, res) => {
             data: { course },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 

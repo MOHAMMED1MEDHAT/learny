@@ -41,7 +41,7 @@ const signUpController = async (req, res) => {
         });
     } catch (err) {
         console.log(err);
-        errorHandlerMw(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
@@ -97,7 +97,8 @@ const login = async (req, res) => {
             token: token,
         });
     } catch (err) {
-        errorHandlerMw(err);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
@@ -109,7 +110,8 @@ const logout = async (req, res) => {
         // console.log(req.body.type.toUpperCase());
         //--------------------------
     } catch (err) {
-        errorHandlerMw(err);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 

@@ -9,10 +9,7 @@ const jwtSCRT = config.get("env_var.jwtScreteKey");
 //get user courses by user id
 const getUserCoursesByUserId = async (req, res) => {
     try {
-        const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         if (!mongoose.isValidObjectId(userId)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -31,17 +28,15 @@ const getUserCoursesByUserId = async (req, res) => {
             data: { userCourse },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //update time course watched by course id
 const updateWatchedTimeByCourseId = async (req, res) => {
     try {
-        const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -73,17 +68,15 @@ const updateWatchedTimeByCourseId = async (req, res) => {
             data: { userCourse },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
 //update course status by course id
 const updateCourseStatusByCourseId = async (req, res) => {
     try {
-        const { userId } = jwt.verify(
-            req.header("Cookie").split("").slice(13).join(""),
-            jwtSCRT
-        );
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -115,7 +108,8 @@ const updateCourseStatusByCourseId = async (req, res) => {
             data: { userCourse },
         });
     } catch (err) {
-        errorHandlerMw(err, req, res);
+        console.log(err);
+        errorHandlerMw(req, res, err);
     }
 };
 
