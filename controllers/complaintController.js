@@ -158,7 +158,7 @@ const deleteComplaintByComplaintId = async (req, res) => {
             data: { complaint },
         });
     } catch (err) {
-        console.log(err);
+        console.log(req, err);
         // errorHandlerMw(req, res, err);
         res.send("error");
     }
