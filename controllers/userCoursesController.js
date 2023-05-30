@@ -7,7 +7,7 @@ const config = require("config");
 const jwtSCRT = config.get("env_var.jwtScreteKey");
 
 //get user courses by user id
-const getUserCoursesByUserId = async (req, res) => {
+exports.getUserCoursesByUserId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
@@ -28,13 +28,12 @@ const getUserCoursesByUserId = async (req, res) => {
             data: { userCourse },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //update time course watched by course id
-const updateWatchedTimeByCourseId = async (req, res) => {
+exports.updateWatchedTimeByCourseId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
@@ -68,13 +67,12 @@ const updateWatchedTimeByCourseId = async (req, res) => {
             data: { userCourse },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //update course status by course id
-const updateCourseStatusByCourseId = async (req, res) => {
+exports.updateCourseStatusByCourseId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
@@ -108,13 +106,6 @@ const updateCourseStatusByCourseId = async (req, res) => {
             data: { userCourse },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
-};
-
-module.exports = {
-    getUserCoursesByUserId,
-    updateWatchedTimeByCourseId,
-    updateCourseStatusByCourseId,
 };

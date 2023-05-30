@@ -7,7 +7,7 @@ const config = require("config");
 const jwtSCRT = config.get("env_var.jwtScreteKey");
 
 //get all testmonials
-const getAllTestmonials = async (req, res) => {
+exports.getAllTestmonials = async (req, res) => {
     try {
         const filter = req.query;
         console.log(filter);
@@ -29,59 +29,55 @@ const getAllTestmonials = async (req, res) => {
             data: { testmonials },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //get testmonial by id
-const getTestmonialById = async (req, res) => {
-    try {
-        if (!mongoose.isValidObjectId(req.params.id)) {
-            return res.status(400).json({ message: "Invalid id" });
-        }
-
-        const testmonial = await Testmonial.findById(req.params.id).exec();
-
-        if (!testmonial) {
-            return res.status(204).json({ message: "testmonial not found" });
-        }
-
-        res.status(200).json({
-            message: "testmonial found",
-            data: { testmonial },
-        });
-    } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+exports.getTestmonialById = async (req, res) => {
+    // try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+        return res.status(400).json({ message: "Invalid id" });
     }
+
+    const testmonial = await Testmonial.findById(req.params.id).exec();
+
+    if (!testmonial) {
+        return res.status(204).json({ message: "testmonial not found" });
+    }
+
+    res.status(200).json({
+        message: "testmonial found",
+        data: { testmonial },
+    });
+    // } catch (err) {
+    //     errorHandlerMw(err, res);
+    // }
 };
 
-const addTestmonials = async (req, res) => {
+exports.addTestmonials = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         const { description, dateOfSubmation } = req.body;
 
-        let testmonial = new Testmonial({
+        const testmonial = await Testmonial.create({
             userId,
             description,
             dateOfSubmation,
         });
-        await testmonial.save();
 
         res.status(200).json({
             message: "testmonial was added successfully",
             data: { testmonial },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //update testmonial by testmonial id
-const updateTestmonialById = async (req, res) => {
+exports.updateTestmonialById = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
@@ -110,12 +106,11 @@ const updateTestmonialById = async (req, res) => {
             data: { testmonial },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
-const deleteTestmonialById = async (req, res) => {
+exports.deleteTestmonialById = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -139,15 +134,6 @@ const deleteTestmonialById = async (req, res) => {
             data: { testmonial },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
-};
-
-module.exports = {
-    getAllTestmonials,
-    getTestmonialById,
-    addTestmonials,
-    updateTestmonialById,
-    deleteTestmonialById,
 };

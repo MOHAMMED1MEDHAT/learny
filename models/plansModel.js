@@ -1,14 +1,18 @@
 const mongoose = require("mongoose");
 
-const planSchema = mongoose.Schema({
+const featuresShcema = new mongoose.Schema({
+    feature: {
+        type: String,
+        required: true,
+    },
+});
+
+const planSchema = new mongoose.Schema({
     planName: {
         type: String,
         required: true,
     },
-    features: {
-        type: String,
-        required: true,
-    },
+    features: [featuresShcema],
     costOfPlan: {
         type: String,
         required: true,

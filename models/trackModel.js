@@ -14,7 +14,7 @@ const subscripersSchema = new mongoose.Schema({
     },
 });
 
-const trackSchema = mongoose.Schema({
+const trackSchema = new mongoose.Schema({
     categoryName: {
         type: String,
         required: true,

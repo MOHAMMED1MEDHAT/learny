@@ -7,7 +7,7 @@ const config = require("config");
 const jwtSCRT = config.get("env_var.jwtScreteKey");
 
 //get all plans
-const getAllPlans = async (req, res) => {
+exports.getAllPlans = async (req, res) => {
     try {
         const filter = req.query;
         console.log(filter);
@@ -22,12 +22,11 @@ const getAllPlans = async (req, res) => {
             data: { plans },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(req, zerr);
     }
 };
 
-const getPlanById = async (req, res) => {
+exports.getPlanById = async (req, res) => {
     try {
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -44,12 +43,10 @@ const getPlanById = async (req, res) => {
             data: { plan },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(req, zerr);
     }
 };
-
-const addPlan = async (req, res) => {
+exports.addPlan = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -58,26 +55,24 @@ const addPlan = async (req, res) => {
 
         const { planName, features, costOfPlan, subscriptionType } = req.body;
 
-        let plan = new Plan({
+        const plan = await Plan.create({
             planName,
             features,
             costOfPlan,
             subscriptionType,
         });
-        await plan.save();
 
         res.status(200).json({
             message: "plan was added successfully",
             data: { plan },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(req, zerr);
     }
 };
 
 //update plan by plan id
-const updatePlanById = async (req, res) => {
+exports.updatePlanById = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -110,12 +105,11 @@ const updatePlanById = async (req, res) => {
             data: { plan },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
-const deletePlan = async (req, res) => {
+exports.deletePlan = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -137,15 +131,6 @@ const deletePlan = async (req, res) => {
             data: { plan },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(req, zerr);
     }
-};
-
-module.exports = {
-    getAllPlans,
-    getPlanById,
-    addPlan,
-    updatePlanById,
-    deletePlan,
 };

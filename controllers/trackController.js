@@ -7,7 +7,7 @@ const config = require("config");
 const jwtSCRT = config.get("env_var.jwtScreteKey");
 
 //get all tracks
-const getAllTracks = async (req, res) => {
+exports.getAllTracks = async (req, res) => {
     try {
         const filter = req.query;
         console.log(filter);
@@ -24,13 +24,12 @@ const getAllTracks = async (req, res) => {
             data: { tracks },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //get track by id
-const getTrackById = async (req, res) => {
+exports.getTrackById = async (req, res) => {
     try {
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -59,13 +58,12 @@ const getTrackById = async (req, res) => {
 
         res.status(200).json({ message: "track found", data: { track } });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //add track
-const addTrack = async (req, res) => {
+exports.addTrack = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -82,27 +80,25 @@ const addTrack = async (req, res) => {
             return res.status(200).json({ message: "this name is used" });
         }
 
-        let track = new Track({
+        const track = await Track.create({
             categoryName,
             roadmap,
             subscriptionLevel,
             imageUrl,
             courses,
         });
-        await track.save();
 
         res.status(200).json({
             message: "track was added successfully",
             data: { track },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //update track by id
-const updateTrackById = async (req, res) => {
+exports.updateTrackById = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -137,13 +133,12 @@ const updateTrackById = async (req, res) => {
             data: { track },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //update track courses
-const updateTrackCourses = async (req, res) => {
+exports.updateTrackCourses = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -173,13 +168,12 @@ const updateTrackCourses = async (req, res) => {
             data: { track },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //subscripe to track by track id
-const subscripeToTrackByTrackId = async (req, res) => {
+exports.subscripeToTrackByTrackId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
@@ -217,13 +211,12 @@ const subscripeToTrackByTrackId = async (req, res) => {
             data: { track },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //unsubscripe to track by track id
-const unsubscripeToTrackById = async (req, res) => {
+exports.unsubscripeToTrackById = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
@@ -260,13 +253,12 @@ const unsubscripeToTrackById = async (req, res) => {
             data: { track },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //delete track by id
-const deleteTrackByTrackId = async (req, res) => {
+exports.deleteTrackByTrackId = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -288,18 +280,6 @@ const deleteTrackByTrackId = async (req, res) => {
             data: { track },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
-};
-
-module.exports = {
-    getAllTracks,
-    getTrackById,
-    addTrack,
-    updateTrackById,
-    updateTrackCourses,
-    subscripeToTrackByTrackId,
-    unsubscripeToTrackById,
-    deleteTrackByTrackId,
 };

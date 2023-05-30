@@ -8,7 +8,7 @@ const schema = {
             type: "string",
         },
         features: {
-            type: "string",
+            type: "array",
         },
         costOfPlan: {
             type: "string",

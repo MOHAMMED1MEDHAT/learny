@@ -7,7 +7,7 @@ const config = require("config");
 const jwtSCRT = config.get("env_var.jwtScreteKey");
 
 //get all complaints
-const getAllComplaints = async (req, res) => {
+exports.getAllComplaints = async (req, res) => {
     try {
         const filter = req.query;
         console.log(filter);
@@ -24,13 +24,12 @@ const getAllComplaints = async (req, res) => {
             data: { complaints },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //get all complaints by user id
-const getAllComplaintsByUserId = async (req, res) => {
+exports.getAllComplaintsByUserId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
@@ -47,12 +46,11 @@ const getAllComplaintsByUserId = async (req, res) => {
             data: { complaints },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
-const getComplaintByComplaintId = async (req, res) => {
+exports.getComplaintByComplaintId = async (req, res) => {
     try {
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -69,35 +67,32 @@ const getComplaintByComplaintId = async (req, res) => {
             data: { complaint },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
-const addComplaint = async (req, res) => {
+exports.addComplaint = async (req, res) => {
     try {
         const { name, emailToContact, subjectOfComplaint, message } = req.body;
 
-        let complaint = new Complaint({
+        const complaint = await Complaint.create({
             name,
             emailToContact,
             subjectOfComplaint,
             message,
         });
-        await complaint.save();
 
         res.status(200).json({
             message: "complaint was added successfully",
             data: { complaint },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //update complaint by complaint id
-const updateComplaintByComplaintId = async (req, res) => {
+exports.updateComplaintByComplaintId = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -129,12 +124,11 @@ const updateComplaintByComplaintId = async (req, res) => {
             data: { complaint },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
-const deleteComplaintByComplaintId = async (req, res) => {
+exports.deleteComplaintByComplaintId = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -158,17 +152,7 @@ const deleteComplaintByComplaintId = async (req, res) => {
             data: { complaint },
         });
     } catch (err) {
-        console.log(req, err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
         // res.send("error");
     }
-};
-
-module.exports = {
-    getAllComplaints,
-    getAllComplaintsByUserId,
-    getComplaintByComplaintId,
-    addComplaint,
-    updateComplaintByComplaintId,
-    deleteComplaintByComplaintId,
 };

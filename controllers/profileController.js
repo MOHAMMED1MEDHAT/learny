@@ -6,7 +6,7 @@ const config = require("config");
 const jwtSCRT = config.get("env_var.jwtScreteKey");
 
 //get by user id
-const getUser = async (req, res) => {
+exports.getUser = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
@@ -20,11 +20,6 @@ const getUser = async (req, res) => {
             data: { user },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(err, req, res);
+        errorHandlerMw(err, res);
     }
-};
-
-module.exports = {
-    getUser,
 };

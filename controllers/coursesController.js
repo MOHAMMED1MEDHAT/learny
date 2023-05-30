@@ -1,6 +1,8 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Course = require("../models/coursesModel");
 const UserCourse = require("../models/userCoursesModel");
+const userCourseService = require("../services/userCourseService");
+const courseService = require("../services/courseService");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -8,7 +10,7 @@ const config = require("config");
 const jwtSCRT = config.get("env_var.jwtScreteKey");
 
 //get all courses
-const getAllCourses = async (req, res) => {
+exports.getAllCourses = async (req, res) => {
     try {
         const filter = req.query;
         console.log(filter);
@@ -25,13 +27,12 @@ const getAllCourses = async (req, res) => {
             data: { courses },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //get course by course id
-const getCourseByCourseId = async (req, res) => {
+exports.getCourseByCourseId = async (req, res) => {
     try {
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -45,13 +46,12 @@ const getCourseByCourseId = async (req, res) => {
 
         res.status(200).json({ message: "course found", data: { course } });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //add course
-const addCourse = async (req, res) => {
+exports.addCourse = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -67,25 +67,19 @@ const addCourse = async (req, res) => {
             return res.status(200).json({ message: "this name is used" });
         }
 
-        let course = new Course({
-            courseName,
-            links,
-            imageUrl,
-        });
-        await course.save();
+        const course = await Course.create({ courseName, links, imageUrl });
 
         res.status(200).json({
             message: "course was added successfully",
             data: { course },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //update course by course id
-const updateCourseByCourseId = async (req, res) => {
+exports.updateCourseByCourseId = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -117,13 +111,12 @@ const updateCourseByCourseId = async (req, res) => {
             data: { course },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //update course links by course id
-const updateCourseLinksByCourseId = async (req, res) => {
+exports.updateCourseLinksByCourseId = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -153,13 +146,12 @@ const updateCourseLinksByCourseId = async (req, res) => {
             data: { course },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //subscripe to course by course id
-const subscripeToCourseByCourseId = async (req, res) => {
+exports.subscripeToCourseByCourseId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
@@ -168,76 +160,38 @@ const subscripeToCourseByCourseId = async (req, res) => {
         }
 
         //add subscription to courses Model
-        const { subscripers } = await Course.findById(req.params.id).exec();
-        for (const subscriper of subscripers) {
-            if (subscriper.subscriperId == userId) {
-                return res
-                    .status(400)
-                    .json({ message: "user subscriped before" });
-            }
+        const course = await courseService.subscripe({
+            Course,
+            userId,
+            courseId: req.params.id,
+        });
+
+        if (course === "subscriped".toUpperCase()) {
+            return res.status(400).json({ message: "User subscriped before" });
         }
-
-        const subscriper = {
-            subscriperId: userId,
-        };
-        subscripers.push(subscriper);
-
-        const course = await Course.findByIdAndUpdate(
-            req.params.id,
-            {
-                subscripers,
-            },
-            { returnOriginal: false }
-        ).exec();
 
         if (!course) {
             return res.status(400).json({ message: "Bad Request" });
         }
 
         //add subscription to userCourses Model
-        //NOTE: if user never subscriped
-        const userSubscripedCoursesBefore = await UserCourse.findOne({
+        userCourseService.subscripe({
+            UserCourse,
             userId,
-        }).exec();
-
-        const coursesOfUser = {
-            courseId: course._id,
-            watched: "0.0",
-            passed: false,
-        };
-
-        if (!userSubscripedCoursesBefore) {
-            let userCourse = new UserCourse({
-                userId,
-                courses: [coursesOfUser],
-            });
-            await userCourse.save();
-        } else {
-            const { courses } = await UserCourse.findOne({ userId }).exec();
-
-            courses.push(coursesOfUser);
-
-            const userCourse = await UserCourse.findOneAndUpdate(
-                { userId },
-                {
-                    courses,
-                },
-                { returnOriginal: false }
-            ).exec();
-        }
+            courseId: req.params.id,
+        });
 
         res.status(200).json({
             message: "subscriped successfully",
             data: { course },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
 //unsubscripe to course by course id
-const unsubscripeToCourseByCourseId = async (req, res) => {
+exports.unsubscripeToCourseByCourseId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
@@ -246,61 +200,35 @@ const unsubscripeToCourseByCourseId = async (req, res) => {
         }
 
         //remove subscription to course Model
-        const { subscripers } = await Course.findById(req.params.id).exec();
-        let subscriper = {};
-        for (const elm of subscripers) {
-            if (elm.subscriperId == userId) {
-                subscriper = elm;
-            }
-        }
-        const idxOfSubscriper = subscripers.indexOf(subscriper);
-        subscripers.splice(idxOfSubscriper, 1);
-
-        const course = await Course.findByIdAndUpdate(
-            req.params.id,
-            {
-                subscripers,
-            },
-            { returnOriginal: false }
-        ).exec();
-
+        const course = await courseService.unsubscripe({
+            Course,
+            userId,
+            courseId: req.params.id,
+        });
         if (!course) {
             return res.status(400).json({ message: "Bad Request" });
         }
         //-----------------------------------------------
 
         //remove subscription from userCourse model
-        const { courses } = await UserCourse.findOne({ userId }).exec();
-        let usercourse = {};
-        for (const elm of courses) {
-            if (elm.courseId == course._id) {
-                userCourse = elm;
-            }
-        }
-        const idxOfUserCourse = courses.indexOf(usercourse);
-        courses.splice(idxOfUserCourse, 1);
-
-        const userCourse = await UserCourse.findOneAndUpdate(
-            { userId },
-            {
-                courses,
-            },
-            { returnOriginal: false }
-        ).exec();
-
+        const userCourse = userCourseService.unsubscripe({
+            UserCourse,
+            userId,
+            courseId: req.params.id,
+        });
         //-----------------------------------------------
         res.status(200).json({
             message: "unsubscriped successfully",
             data: { course, userCourse },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        // console.log(err.message);
+        errorHandlerMw(err, res);
     }
 };
 
 //delete course by course id
-const deleteCourseByCourseId = async (req, res) => {
+exports.deleteCourseByCourseId = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -322,18 +250,6 @@ const deleteCourseByCourseId = async (req, res) => {
             data: { course },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
-};
-
-module.exports = {
-    getAllCourses,
-    getCourseByCourseId,
-    addCourse,
-    updateCourseByCourseId,
-    updateCourseLinksByCourseId,
-    subscripeToCourseByCourseId,
-    unsubscripeToCourseByCourseId,
-    deleteCourseByCourseId,
 };

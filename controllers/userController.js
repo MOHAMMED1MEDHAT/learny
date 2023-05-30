@@ -6,7 +6,7 @@ const {
 
 const bcrypt = require("bcrypt");
 
-const signUpController = async (req, res) => {
+exports.signUpController = async (req, res) => {
     try {
         const { name, email, password, phone, imageUrl, gender, address } =
             req.body;
@@ -19,7 +19,7 @@ const signUpController = async (req, res) => {
         const salt = await bcrypt.genSalt(process.env.BCRYPT_SALT * 1);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        let user = new User({
+        const user = await User.create({
             name,
             email,
             password: hashedPassword,
@@ -28,7 +28,6 @@ const signUpController = async (req, res) => {
             gender,
             address,
         });
-        await user.save();
 
         const token = user.getAuthToken(user._id, user.isAdmin);
 
@@ -36,23 +35,21 @@ const signUpController = async (req, res) => {
 
         res.status(200).json({
             message: "user was added successfully",
-            user,
-            token: token,
+            data: { user, token },
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
-const resetPasswordRequestController = async (req, res, next) => {
+exports.resetPasswordRequestController = async (req, res, next) => {
     const requestPasswordResetService = await requestPasswordReset(
         req.body.email
     );
     return res.json(requestPasswordResetService);
 };
 
-const resetPasswordController = async (req, res, next) => {
+exports.resetPasswordController = async (req, res, next) => {
     const resetPasswordService = await resetPassword(
         req.body.userId,
         req.body.token,
@@ -61,7 +58,7 @@ const resetPasswordController = async (req, res, next) => {
     return res.json({ status: resetPasswordService });
 };
 
-const login = async (req, res) => {
+exports.login = async (req, res) => {
     try {
         console.log(req.body);
         const { email, password } = req.body;
@@ -97,12 +94,11 @@ const login = async (req, res) => {
             token: token,
         });
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
 };
 
-const logout = async (req, res) => {
+exports.logout = async (req, res) => {
     try {
         res.cookie("x-auth-token", "", { httpOnly: true });
         res.status(200).json({ message: "logged out successfully..." });
@@ -110,15 +106,6 @@ const logout = async (req, res) => {
         // console.log(req.body.type.toUpperCase());
         //--------------------------
     } catch (err) {
-        console.log(err);
-        errorHandlerMw(req, res, err);
+        errorHandlerMw(err, res);
     }
-};
-
-module.exports = {
-    signUpController,
-    resetPasswordRequestController,
-    resetPasswordController,
-    login,
-    logout,
 };
