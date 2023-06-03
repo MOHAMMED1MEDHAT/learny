@@ -77,7 +77,7 @@ exports.addTrack = async (req, res) => {
         }).exec();
 
         if (trackAddedBefore) {
-            return res.status(200).json({ message: "this name is used" });
+            return res.status(403).json({ message: "this name is used" });
         }
 
         const track = await Track.create({

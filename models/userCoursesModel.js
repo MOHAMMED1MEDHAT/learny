@@ -7,6 +7,7 @@ const courseOfUserSchema = new mongoose.Schema({
     },
     watched: {
         type: String,
+        trim: true,
         //calc amount watched by minutes
         default: "0.0",
         required: true,

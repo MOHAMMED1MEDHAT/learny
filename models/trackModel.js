@@ -17,19 +17,23 @@ const subscripersSchema = new mongoose.Schema({
 const trackSchema = new mongoose.Schema({
     categoryName: {
         type: String,
+        trim: true,
         required: true,
     },
     roadmap: {
         type: String,
+        trim: true,
         required: true,
     },
     subscriptionLevel: {
         type: String,
+        trim: true,
         default: "FREE",
         required: true,
     },
     imageUrl: {
         type: String,
+        trim: true,
         default: "ImageUrl",
         required: true,
     },

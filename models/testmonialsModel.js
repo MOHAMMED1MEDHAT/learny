@@ -8,10 +8,12 @@ const testmonialSchema = new mongoose.Schema({
     },
     description: {
         type: String,
+        trim: true,
         required: true,
     },
     dateOfSubmation: {
         type: String,
+        trim: true,
         required: true,
     },
 });

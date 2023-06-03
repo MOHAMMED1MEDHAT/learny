@@ -10,10 +10,12 @@ const subscripersSchema = new mongoose.Schema({
 const linksSchema = new mongoose.Schema({
     link: {
         type: String,
+        trim: true,
         required: true,
     },
     resource: {
         type: String,
+        trim: true,
         default: "youtube",
     },
 });
@@ -21,11 +23,13 @@ const linksSchema = new mongoose.Schema({
 const courseSchema = new mongoose.Schema({
     courseName: {
         type: String,
+        trim: true,
         required: true,
     },
     links: [linksSchema],
     imageUrl: {
         type: String,
+        trim: true,
         default: "ImageUrl",
         required: true,
     },

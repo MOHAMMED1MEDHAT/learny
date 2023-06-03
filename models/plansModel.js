@@ -1,24 +1,20 @@
 const mongoose = require("mongoose");
 
-const featuresShcema = new mongoose.Schema({
-    feature: {
-        type: String,
-        required: true,
-    },
-});
-
 const planSchema = new mongoose.Schema({
     planName: {
         type: String,
+        trim: true,
         required: true,
     },
-    features: [featuresShcema],
+    features: [String],
     costOfPlan: {
         type: String,
+        trim: true,
         required: true,
     },
     subscriptionType: {
         type: String,
+        trim: true,
         default: "FREE",
         required: true,
     },

@@ -7,12 +7,14 @@ const jwtSCRT = config.get("env_var.jwtScreteKey");
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
+        trim: true,
         minLength: 3,
         maxLength: 50,
         required: true,
     },
     email: {
         type: String,
+        trim: true,
         validators: {
             validator(val) {
                 return valid.isEmail(val);
@@ -22,33 +24,40 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
+        trim: true,
         minLength: 5,
         required: true,
     },
     phone: {
         type: String,
+        trim: true,
         required: true,
     },
     imageUrl: {
         type: String,
+        trim: true,
         default: "ImageUrl",
         required: true,
     },
     address: {
         type: String,
+        trim: true,
         required: true,
     },
     dateOfBirth: {
         type: String,
+        trim: true,
         default: "2002-04-24",
         required: true,
     },
     gender: {
         type: String,
+        trim: true,
         required: true,
     },
     subscription: {
         type: String,
+        trim: true,
         default: "FREE",
         required: true,
     },
