@@ -22,7 +22,7 @@ exports.getAllPlans = async (req, res) => {
             data: { plans },
         });
     } catch (err) {
-        errorHandlerMw(req, zerr);
+        errorHandlerMw(res, err);
     }
 };
 
@@ -43,7 +43,7 @@ exports.getPlanById = async (req, res) => {
             data: { plan },
         });
     } catch (err) {
-        errorHandlerMw(req, zerr);
+        errorHandlerMw(res, err);
     }
 };
 exports.addPlan = async (req, res) => {
@@ -67,7 +67,7 @@ exports.addPlan = async (req, res) => {
             data: { plan },
         });
     } catch (err) {
-        errorHandlerMw(req, zerr);
+        errorHandlerMw(res, err);
     }
 };
 
@@ -131,6 +131,6 @@ exports.deletePlan = async (req, res) => {
             data: { plan },
         });
     } catch (err) {
-        errorHandlerMw(req, zerr);
+        errorHandlerMw(res, err);
     }
 };
