@@ -25,12 +25,13 @@ const trackSchema = new mongoose.Schema(
             trim: true,
             required: [true, "A track must have a categoryName"],
         },
-        roadmap: {
+        roadmap: [String],
+        subscriptionLevel: {
             type: String,
             trim: true,
-            required: [true, "A track must have a roadmap"],
+            default: "FREE",
+            required: [true, "A track must have a subscriptionLevel"],
         },
-        subscriptionLevel: [String],
         imageUrl: {
             type: String,
             trim: true,
