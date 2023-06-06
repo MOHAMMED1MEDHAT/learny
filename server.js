@@ -20,6 +20,7 @@ process.on("unhandledRejection", (exception) => {
 });
 
 //mongoose connection setup
+//FIXME:change to ATLAS_CONNECTION_STRING
 mongoose
     .connect(process.env.ATLAS_CONNECTION_STRING, {
         useNewUrlParser: true,
@@ -65,6 +66,7 @@ const coursesRouter = require("./routes/courses");
 const userCoursesRouter = require("./routes/userCourses");
 const testmonialRouter = require("./routes/testmonials");
 const planRouter = require("./routes/plans");
+const dashboardRouter = require("./routes/dashboard");
 
 app.use("/api/v1/user", userRouter); //test done
 // app.use("/api/v1/user", authRouter); //test done
@@ -76,6 +78,7 @@ app.use("/api/v1/course", coursesRouter); //test
 app.use("/api/v1/userCourse", userCoursesRouter); //test
 app.use("/api/v1/testmonial", testmonialRouter); //test
 app.use("/api/v1/plan", planRouter); //test
+app.use("/api/v1/dashboard", dashboardRouter);
 
 const port = process.env.PORT;
 app.listen(port, () => {

@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const tokenSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
+        required: [true, "A token must have a userId"],
         ref: "user",
     },
     token: {
         type: String,
         trim: true,
-        required: true,
+        required: [true, "must have a token"],
     },
     createdAt: {
         type: Date,

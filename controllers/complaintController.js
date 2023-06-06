@@ -1,5 +1,6 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Complaint = require("../models/complaintsModel");
+const APIfeatures = require("./../util/queryHandler");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -9,9 +10,16 @@ const jwtSCRT = config.get("env_var.jwtScreteKey");
 //get all complaints
 exports.getAllComplaints = async (req, res) => {
     try {
-        const filter = req.query;
-        console.log(filter);
-        const complaints = await Complaint.find(filter).exec();
+        let Query = Complaint.find();
+
+        const APIfeaturesObj = new APIfeatures(Query, req.query)
+            .filter()
+            .sort()
+            .project()
+            .pagination();
+
+        const complaints = await APIfeaturesObj.MongooseQuery;
+        // const complaints = await Complaint.find();
         if (complaints.length == 0) {
             return res
                 .status(204)
@@ -24,7 +32,8 @@ exports.getAllComplaints = async (req, res) => {
             data: { complaints },
         });
     } catch (err) {
-        errorHandlerMw(err, res);
+        console.log(err);
+        // errorHandlerMw(err, res);
     }
 };
 
@@ -153,6 +162,5 @@ exports.deleteComplaintByComplaintId = async (req, res) => {
         });
     } catch (err) {
         errorHandlerMw(err, res);
-        // res.send("error");
     }
 };

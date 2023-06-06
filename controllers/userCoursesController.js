@@ -1,5 +1,6 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const UserCourse = require("../models/userCoursesModel");
+const APIfeatures = require("./../util/queryHandler");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");

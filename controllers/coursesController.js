@@ -3,6 +3,7 @@ const Course = require("../models/coursesModel");
 const UserCourse = require("../models/userCoursesModel");
 const userCourseService = require("../services/userCourseService");
 const courseService = require("../services/courseService");
+const APIfeatures = require("./../util/queryHandler");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -12,9 +13,15 @@ const jwtSCRT = config.get("env_var.jwtScreteKey");
 //get all courses
 exports.getAllCourses = async (req, res) => {
     try {
-        const filter = req.query;
-        console.log(filter);
-        const courses = await Course.find(filter).exec();
+        let Query = Course.find();
+
+        const APIfeaturesObj = new APIfeatures(Query, req.query)
+            .filter()
+            .sort()
+            .project()
+            .pagination();
+
+        const courses = await APIfeaturesObj.MongooseQuery;
         if (courses.length == 0) {
             return res
                 .status(204)
@@ -64,7 +71,7 @@ exports.addCourse = async (req, res) => {
         }).exec();
 
         if (courseAddedBefore) {
-            return res.status(200).json({ message: "this name is used" });
+            return res.status(409).json({ message: "this name is used" });
         }
 
         const course = await Course.create({ courseName, links, imageUrl });

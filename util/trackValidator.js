@@ -8,7 +8,7 @@ const schema = {
             type: "string",
         },
         roadmap: {
-            type: "string",
+            type: "array",
         },
         subscriptionLevel: {
             type: "string",

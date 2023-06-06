@@ -1,5 +1,6 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Track = require("../models/trackModel");
+const APIfeatures = require("./../util/queryHandler");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -9,9 +10,22 @@ const jwtSCRT = config.get("env_var.jwtScreteKey");
 //get all tracks
 exports.getAllTracks = async (req, res) => {
     try {
-        const filter = req.query;
-        console.log(filter);
-        const tracks = await Track.find(filter).exec();
+        let Query = Track.find();
+
+        const APIfeaturesObj = new APIfeatures(Query, req.query)
+            .filter()
+            .sort()
+            .project()
+            .pagination();
+
+        const tracks = await APIfeaturesObj.MongooseQuery.populate({
+            path: "courses",
+            populate: {
+                path: "courseId",
+                select: "courseName",
+            },
+        });
+        // const tracks = await Track.find();
         if (tracks.length == 0) {
             return res
                 .status(204)
@@ -77,7 +91,7 @@ exports.addTrack = async (req, res) => {
         }).exec();
 
         if (trackAddedBefore) {
-            return res.status(403).json({ message: "this name is used" });
+            return res.status(409).json({ message: "this name is used" });
         }
 
         const track = await Track.create({
@@ -151,10 +165,14 @@ exports.updateTrackCourses = async (req, res) => {
 
         const { courses } = req.body;
 
+        let trackOldCourse = (await Track.findById(req.params.id)).courses;
+
+        trackOldCourse = trackOldCourse.concat(courses);
+
         const track = await Track.findByIdAndUpdate(
             req.params.id,
             {
-                courses,
+                courses: trackOldCourse,
             },
             { returnOriginal: false }
         ).exec();

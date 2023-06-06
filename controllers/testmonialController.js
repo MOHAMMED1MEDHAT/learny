@@ -1,5 +1,6 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Testmonial = require("../models/testmonialsModel");
+const APIfeatures = require("./../util/queryHandler");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -9,14 +10,18 @@ const jwtSCRT = config.get("env_var.jwtScreteKey");
 //get all testmonials
 exports.getAllTestmonials = async (req, res) => {
     try {
-        const filter = req.query;
-        console.log(filter);
-        const testmonials = await Testmonial.find(filter)
-            .populate({
-                path: "userId",
-                select: "name",
-            })
-            .exec();
+        let Query = Testmonial.find();
+
+        const APIfeaturesObj = new APIfeatures(Query, req.query)
+            .filter()
+            .sort()
+            .project()
+            .pagination();
+
+        const testmonials = await APIfeaturesObj.MongooseQuery.populate({
+            path: "userId",
+            select: "name",
+        }).exec();
         if (testmonials.length == 0) {
             return res
                 .status(204)
@@ -35,24 +40,24 @@ exports.getAllTestmonials = async (req, res) => {
 
 //get testmonial by id
 exports.getTestmonialById = async (req, res) => {
-    // try {
-    if (!mongoose.isValidObjectId(req.params.id)) {
-        return res.status(400).json({ message: "Invalid id" });
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(400).json({ message: "Invalid id" });
+        }
+
+        const testmonial = await Testmonial.findById(req.params.id).exec();
+
+        if (!testmonial) {
+            return res.status(204).json({ message: "testmonial not found" });
+        }
+
+        res.status(200).json({
+            message: "testmonial found",
+            data: { testmonial },
+        });
+    } catch (err) {
+        errorHandlerMw(err, res);
     }
-
-    const testmonial = await Testmonial.findById(req.params.id).exec();
-
-    if (!testmonial) {
-        return res.status(204).json({ message: "testmonial not found" });
-    }
-
-    res.status(200).json({
-        message: "testmonial found",
-        data: { testmonial },
-    });
-    // } catch (err) {
-    //     errorHandlerMw(err, res);
-    // }
 };
 
 exports.addTestmonials = async (req, res) => {

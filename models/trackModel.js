@@ -12,41 +12,42 @@ const subscripersSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
     },
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+    },
 });
 
-const trackSchema = new mongoose.Schema({
-    categoryName: {
-        type: String,
-        trim: true,
-        required: true,
+const trackSchema = new mongoose.Schema(
+    {
+        categoryName: {
+            type: String,
+            trim: true,
+            required: [true, "A track must have a categoryName"],
+        },
+        roadmap: {
+            type: String,
+            trim: true,
+            required: [true, "A track must have a roadmap"],
+        },
+        subscriptionLevel: [String],
+        imageUrl: {
+            type: String,
+            trim: true,
+            default: "ImageUrl",
+            required: [true, "A track must have a imageUrl"],
+        },
+        courses: [coursesSchema],
+        subscripers: [subscripersSchema],
     },
-    roadmap: {
-        type: String,
-        trim: true,
-        required: true,
-    },
-    subscriptionLevel: {
-        type: String,
-        trim: true,
-        default: "FREE",
-        required: true,
-    },
-    imageUrl: {
-        type: String,
-        trim: true,
-        default: "ImageUrl",
-        required: true,
-    },
-    courses: [coursesSchema],
-    subscripers: [subscripersSchema],
-});
+    {
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
+    }
+);
 
 trackSchema.virtual("id").get(function () {
     return this._id.toHexString();
-});
-
-trackSchema.set("toJSON", {
-    virtuals: true,
 });
 
 module.exports = mongoose.model("track", trackSchema);

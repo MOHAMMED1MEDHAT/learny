@@ -1,5 +1,6 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Plan = require("../models/plansModel");
+const APIfeatures = require("./../util/queryHandler");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -9,9 +10,15 @@ const jwtSCRT = config.get("env_var.jwtScreteKey");
 //get all plans
 exports.getAllPlans = async (req, res) => {
     try {
-        const filter = req.query;
-        console.log(filter);
-        const plans = await Plan.find(filter).exec();
+        let Query = Plan.find();
+
+        const APIfeaturesObj = new APIfeatures(Query, req.query)
+            .filter()
+            .sort()
+            .project()
+            .pagination();
+
+        const plans = await APIfeaturesObj.MongooseQuery;
         if (plans.length == 0) {
             return res.status(204).json({ message: "No plans were added yet" });
         }
