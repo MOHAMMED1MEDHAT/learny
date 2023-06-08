@@ -100,7 +100,7 @@ exports.updatePlanById = async (req, res) => {
                 costOfPlan,
                 subscriptionType,
             },
-            { returnOriginal: false }
+            { runValidators: true, new: true }
         ).exec();
 
         if (!plan) {

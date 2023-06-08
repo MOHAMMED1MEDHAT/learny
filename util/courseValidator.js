@@ -9,6 +9,21 @@ const schema = {
         },
         links: {
             type: "array",
+            items: {
+                type: "object",
+                properties: {
+                    link: {
+                        type: "string",
+                    },
+                    title: {
+                        type: "string",
+                    },
+                    rescource: {
+                        type: "string",
+                    },
+                },
+                required: ["link", "title"],
+            },
         },
         imageUrl: {
             type: "string",

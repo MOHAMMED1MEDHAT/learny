@@ -6,6 +6,15 @@ const schema = {
     properties: {
         courses: {
             type: "array",
+            items: {
+                type: "object",
+                properties: {
+                    courseId: {
+                        type: "string",
+                    },
+                },
+                required: ["courseId"],
+            },
         },
     },
     required: ["courses"],

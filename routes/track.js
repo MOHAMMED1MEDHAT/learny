@@ -16,7 +16,9 @@ router.post("/", validator, Track.addTrack);
 router.put("/:id", validator, Track.updateTrackById);
 
 //update track courses
-router.patch("/update/courses/:id", Track.updateTrackCourses);
+router.patch("/update/addCourses/:id", Track.addCoursesToTrack);
+
+router.patch("/update/removeCourses/:id", Track.deleteCoursesFromTrack);
 
 //subscripe to track by track id
 router.patch("/subscripe/:id", Track.subscripeToTrackByTrackId);

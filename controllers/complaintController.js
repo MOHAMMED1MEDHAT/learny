@@ -121,7 +121,7 @@ exports.updateComplaintByComplaintId = async (req, res) => {
                 links,
                 imageUrl,
             },
-            { returnOriginal: false }
+            { runValidators: true, new: true }
         ).exec();
 
         if (!complaint) {

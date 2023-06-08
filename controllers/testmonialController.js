@@ -99,7 +99,7 @@ exports.updateTestmonialById = async (req, res) => {
                 description,
                 dateOfSubmation,
             },
-            { returnOriginal: false }
+            { runValidators: true, new: true }
         ).exec();
 
         if (!testmonial) {

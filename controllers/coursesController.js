@@ -106,7 +106,7 @@ exports.updateCourseByCourseId = async (req, res) => {
                 links,
                 imageUrl,
             },
-            { returnOriginal: false }
+            { runValidators: true, new: true }
         ).exec();
 
         if (!course) {
@@ -141,7 +141,7 @@ exports.updateCourseLinksByCourseId = async (req, res) => {
             {
                 links,
             },
-            { returnOriginal: false }
+            { runValidators: true, new: true }
         ).exec();
 
         if (!course) {

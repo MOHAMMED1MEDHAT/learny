@@ -135,7 +135,7 @@ exports.updateTrackById = async (req, res) => {
                 imageUrl,
                 courses,
             },
-            { returnOriginal: false }
+            { runValidators: true, new: true }
         ).exec();
 
         if (!track) {
@@ -152,7 +152,8 @@ exports.updateTrackById = async (req, res) => {
 };
 
 //update track courses
-exports.updateTrackCourses = async (req, res) => {
+//TODO: check if the course exists
+exports.addCoursesToTrack = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
@@ -165,14 +166,26 @@ exports.updateTrackCourses = async (req, res) => {
 
         const { courses } = req.body;
 
-        let trackOldCourse = (await Track.findById(req.params.id)).courses;
+        let trackOldCourses = (await Track.findById(req.params.id)).courses;
 
-        trackOldCourse = trackOldCourse.concat(courses);
+        if (trackOldCourses.length == 0) {
+            courses.map((course) => {
+                trackOldCourses.push(course);
+            });
+        } else {
+            trackOldCourses.map((course) => {
+                for (courseFromReq of courses) {
+                    if (!courseFromReq.courseId == course.courseId) {
+                        trackOldCourses.push(coursesFromReq);
+                    }
+                }
+            });
+        }
 
         const track = await Track.findByIdAndUpdate(
             req.params.id,
             {
-                courses: trackOldCourse,
+                courses: trackOldCourses,
             },
             { returnOriginal: false }
         ).exec();
@@ -182,7 +195,57 @@ exports.updateTrackCourses = async (req, res) => {
         }
 
         res.status(200).json({
-            message: "track courses was updated successfully",
+            message: "courses was added successfully to track",
+            data: { track },
+        });
+    } catch (err) {
+        errorHandlerMw(err, res);
+    }
+};
+
+exports.deleteCoursesFromTrack = async (req, res) => {
+    try {
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        if (!isAdmin) {
+            return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
+        }
+
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(400).json({ message: "Invalid id" });
+        }
+
+        const { courses } = req.body;
+
+        const trackOldCourses = (await Track.findById(req.params.id)).courses;
+
+        trackOldCourses
+            .map((course) => {
+                for (courseFromReq of courses) {
+                    return course.courseId == courseFromReq.courseId;
+                }
+            })
+            .map((courseToRemove, index) => {
+                if (courseToRemove) {
+                    trackOldCourses.splice(index, 1);
+                }
+            });
+
+        console.log(trackOldCourses.length);
+
+        const track = await Track.findByIdAndUpdate(
+            req.params.id,
+            {
+                courses: trackOldCourses,
+            },
+            { returnOriginal: false }
+        ).exec();
+
+        if (!track) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
+
+        res.status(200).json({
+            message: "courses was removed successfully from track",
             data: { track },
         });
     } catch (err) {

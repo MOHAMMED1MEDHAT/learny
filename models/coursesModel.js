@@ -19,6 +19,11 @@ const linksSchema = new mongoose.Schema({
         trim: true,
         required: [true, "A course must have a link"],
     },
+    title: {
+        type: String,
+        trim: true,
+        required: [true, "A course must have a link"],
+    },
     resource: {
         type: String,
         trim: true,
