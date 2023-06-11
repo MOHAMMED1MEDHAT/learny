@@ -13,4 +13,6 @@ router.get("/trackEachSubscripers", Dashboard.getEachTrackSubscripersNum);
 
 router.get("/usersSubsForEachMonth", Dashboard.getEachMonthUsersSubs);
 
+router.get("/totalNums", Dashboard.getTotalEntitiesNums);
+
 module.exports = router;

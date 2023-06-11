@@ -157,6 +157,7 @@ exports.updateCourseLinksByCourseId = async (req, res) => {
     }
 };
 
+//TODO:this will be inside sub of track in side a map of course ids
 //subscripe to course by course id
 exports.subscripeToCourseByCourseId = async (req, res) => {
     try {

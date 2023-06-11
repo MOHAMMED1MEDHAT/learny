@@ -23,11 +23,11 @@ router.put("/:id", validator, Course.updateCourseByCourseId);
 //update course links by course id
 router.patch("/update/links/:id", Course.updateCourseLinksByCourseId);
 
-//subscripe to course by course id
-router.patch("/subscripe/:id", Course.subscripeToCourseByCourseId);
+// //subscripe to course by course id
+// router.patch("/subscripe/:id", Course.subscripeToCourseByCourseId);
 
-//unsubscripe to course by course id
-router.patch("/unsubscripe/:id", Course.unsubscripeToCourseByCourseId);
+// //unsubscripe to course by course id
+// router.patch("/unsubscripe/:id", Course.unsubscripeToCourseByCourseId);
 
 //delete course by course id
 router.delete("/:id", Course.deleteCourseByCourseId);

@@ -1,6 +1,10 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const User = require("../models/userModel");
 const Track = require("../models/trackModel");
+const Course = require("../models/coursesModel");
+const Plan = require("../models/plansModel");
+const Complaint = require("../models/complaintsModel");
+const Testmonials = require("../models/testmonialsModel");
 
 const jwt = require("jsonwebtoken");
 const config = require("config");
@@ -17,7 +21,7 @@ exports.getNumOfUser = async (req, res) => {
             {
                 $group: {
                     _id: null,
-                    numTours: { $sum: 1 },
+                    numTracks: { $sum: 1 },
                 },
             },
         ]);
@@ -42,7 +46,7 @@ exports.getNumOfUserForEachSubscriptionLevel = async (req, res) => {
             {
                 $group: {
                     _id: "$subscription",
-                    numTours: { $sum: 1 },
+                    numTracks: { $sum: 1 },
                 },
             },
         ]);
@@ -70,7 +74,7 @@ exports.getAllTracksSubscripersNum = async (req, res) => {
             {
                 $group: {
                     _id: null,
-                    numTours: { $sum: 1 },
+                    numTracks: { $sum: 1 },
                 },
             },
         ]);
@@ -98,7 +102,7 @@ exports.getEachTrackSubscripersNum = async (req, res) => {
             {
                 $group: {
                     _id: "$categoryName",
-                    numTours: { $sum: 1 },
+                    numTracks: { $sum: 1 },
                 },
             },
         ]);
@@ -126,7 +130,7 @@ exports.getEachMonthUsersSubs = async (req, res) => {
             {
                 $group: {
                     _id: { $month: "$subscripers.createdAt" },
-                    numTours: { $sum: 1 },
+                    numTracks: { $sum: 1 },
                 },
             },
             {
@@ -139,6 +143,89 @@ exports.getEachMonthUsersSubs = async (req, res) => {
                 $sort: { month: 1 },
             },
         ]);
+
+        res.status(200).json({
+            message: "success",
+            data: { stats },
+        });
+    } catch (err) {
+        errorHandlerMw(err, res);
+    }
+};
+
+exports.getTotalEntitiesNums = async (req, res) => {
+    try {
+        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        if (!isAdmin) {
+            return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
+        }
+
+        const trackNums = await Track.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    nums: { $sum: 1 },
+                },
+            },
+            {
+                $project: { _id: 0 },
+            },
+        ]);
+
+        const courseNums = await Course.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    nums: { $sum: 1 },
+                },
+            },
+            {
+                $project: { _id: 0 },
+            },
+        ]);
+
+        const testmonialNums = await Testmonials.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    nums: { $sum: 1 },
+                },
+            },
+            {
+                $project: { _id: 0 },
+            },
+        ]);
+
+        const complaintNums = await Complaint.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    nums: { $sum: 1 },
+                },
+            },
+            {
+                $project: { _id: 0 },
+            },
+        ]);
+
+        const planNums = await Plan.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    nums: { $sum: 1 },
+                },
+            },
+            {
+                $project: { _id: 0 },
+            },
+        ]);
+
+        let stats = {};
+        stats.trackNums = trackNums[0].nums;
+        stats.courseNums = courseNums[0].nums;
+        stats.complaintNums = complaintNums[0].nums;
+        stats.testmonialNums = testmonialNums[0].nums;
+        stats.planNums = planNums[0].nums;
 
         res.status(200).json({
             message: "success",

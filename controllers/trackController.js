@@ -54,7 +54,7 @@ exports.getTrackById = async (req, res) => {
                 path: "courses",
                 populate: {
                     path: "courseId",
-                    select: "courseName",
+                    select: "courseName imageUrl",
                 },
             })
             .populate({
@@ -154,53 +154,53 @@ exports.updateTrackById = async (req, res) => {
 //update track courses
 //TODO: check if the course exists
 exports.addCoursesToTrack = async (req, res) => {
-    try {
-        const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
-        if (!isAdmin) {
-            return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
-        }
-
-        if (!mongoose.isValidObjectId(req.params.id)) {
-            return res.status(400).json({ message: "Invalid id" });
-        }
-
-        const { courses } = req.body;
-
-        let trackOldCourses = (await Track.findById(req.params.id)).courses;
-
-        if (trackOldCourses.length == 0) {
-            courses.map((course) => {
-                trackOldCourses.push(course);
-            });
-        } else {
-            trackOldCourses.map((course) => {
-                for (courseFromReq of courses) {
-                    if (!courseFromReq.courseId == course.courseId) {
-                        trackOldCourses.push(coursesFromReq);
-                    }
-                }
-            });
-        }
-
-        const track = await Track.findByIdAndUpdate(
-            req.params.id,
-            {
-                courses: trackOldCourses,
-            },
-            { returnOriginal: false }
-        ).exec();
-
-        if (!track) {
-            return res.status(400).json({ message: "Bad Request" });
-        }
-
-        res.status(200).json({
-            message: "courses was added successfully to track",
-            data: { track },
-        });
-    } catch (err) {
-        errorHandlerMw(err, res);
+    // try {
+    const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+    if (!isAdmin) {
+        return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
     }
+
+    if (!mongoose.isValidObjectId(req.params.id)) {
+        return res.status(400).json({ message: "Invalid id" });
+    }
+
+    const { courses } = req.body;
+
+    let trackOldCourses = (await Track.findById(req.params.id)).courses;
+
+    if (trackOldCourses.length == 0) {
+        courses.map((course) => {
+            trackOldCourses.push(course);
+        });
+    } else {
+        trackOldCourses.map((course) => {
+            for (courseFromReq of courses) {
+                if (courseFromReq.courseId != course.courseId) {
+                    trackOldCourses.push(courseFromReq);
+                }
+            }
+        });
+    }
+
+    const track = await Track.findByIdAndUpdate(
+        req.params.id,
+        {
+            courses: trackOldCourses,
+        },
+        { returnOriginal: false }
+    ).exec();
+
+    if (!track) {
+        return res.status(400).json({ message: "Bad Request" });
+    }
+
+    res.status(200).json({
+        message: "courses was added successfully to track",
+        data: { track },
+    });
+    // } catch (err) {
+    //     errorHandlerMw(err, res);
+    // }
 };
 
 exports.deleteCoursesFromTrack = async (req, res) => {
