@@ -7,15 +7,40 @@ module.exports.calcGrade = async ({
 }) => {
     const test = await Test.findById(testId);
 
-    let msg = "";
     const answerRatio = 100 / test.questions.length;
+    let msg = "";
     let grade = 0;
+    //TODO:
+    //return the idx of the correctAnswer inside questions
+    let correctAndNotObj = {};
 
-    answers.map((ans) => {
-        if (test.questions[ans.questionIdx].correctAnswer === ans.answer) {
-            grade += answerRatio;
-        }
-    });
+    answers
+        .map((ans) => {
+            if (test.questions[ans.questionIdx].correctAnswer === ans.answer) {
+                grade += answerRatio;
+                return true;
+            } else {
+                return false;
+            }
+        })
+        .map((flag, idx) => {
+            if (!flag) {
+                // to convert index of the answer to a,b,c,d
+                console.log(
+                    test.questionIdx[idx].answers.indexOf(
+                        test.questionIdx[idx].correctAnswer
+                    ) + 97
+                );
+                // const char = String.fromCharCode(
+                //     test.questionIdx[idx].answers.indexOf(
+                //         test.questionIdx[idx].correctAnswer
+                //     ) + 97
+                // );
+                correctAndNotObj.idx = `${char}:${test.questionIdx[idx].correctAnswer}`;
+            } else {
+                correctAndNotObj.idx = flag;
+            }
+        });
 
     const userTest = await UserTest.create({
         userId,
@@ -29,8 +54,5 @@ module.exports.calcGrade = async ({
         msg = "Passed";
     }
 
-    //TODO:
-    //return the idx of the correctAnswer inside questions
-
-    return { message: msg, grade };
+    return { message: msg, grade, correctAndNotObj };
 };

@@ -41,7 +41,7 @@ const schema = {
         "subscriptionLevel",
         "imageUrl",
         "courses",
-        "test",
+        "testId",
     ],
 };
 
