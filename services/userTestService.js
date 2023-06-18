@@ -10,8 +10,7 @@ module.exports.calcGrade = async ({
     const answerRatio = 100 / test.questions.length;
     let msg = "";
     let grade = 0;
-    //TODO:
-    //return the idx of the correctAnswer inside questions
+    //to return the idx of the correctAnswer inside questions
     let correctAndNotObj = [];
 
     answers
