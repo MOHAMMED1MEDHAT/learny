@@ -2,7 +2,7 @@ const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Test = require("../models/testModel");
 const UserTest = require("../models/userTestModel");
 const APIfeatures = require("./../util/queryHandler");
-const userTestService = require("./../services/userTestService");
+const { calcGrade } = require("./../services/userTestService");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -96,14 +96,13 @@ exports.addUserAnswersToTestById = async (req, res) => {
 
         const { answers } = req.body;
 
-        const { grade, message, correctAndNotObj } =
-            await userTestService.calcGrade({
-                UserTest,
-                Test,
-                userId,
-                testId,
-                answers,
-            });
+        const { grade, message, correctAndNotObj } = await calcGrade({
+            UserTest,
+            Test,
+            userId,
+            testId,
+            answers,
+        });
 
         res.status(200).json({
             data: { grade, message, correctAndNotObj },

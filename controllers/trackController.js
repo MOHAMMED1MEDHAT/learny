@@ -1,5 +1,6 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Track = require("../models/trackModel");
+const { addNotification } = require("./../services/notificationService");
 const APIfeatures = require("./../util/queryHandler");
 
 const mongoose = require("mongoose");
@@ -294,7 +295,16 @@ exports.subscripeToTrackByTrackId = async (req, res) => {
             return res.status(400).json({ message: "Bad Request" });
         }
 
-        res.status(200).json({
+        await addNotification({
+            userId,
+            message: `subsciped successfully to${
+                (
+                    await Track.findById(req.params.id)
+                ).trackName
+            }`,
+        });
+
+        await res.status(200).json({
             message: "subscriped successfully",
             data: { track },
         });
@@ -335,6 +345,15 @@ exports.unsubscripeToTrackById = async (req, res) => {
         if (!track) {
             return res.status(400).json({ message: "Bad Request" });
         }
+
+        await addNotification({
+            userId,
+            message: `unsubsciped successfully from${
+                (
+                    await Track.findById(req.params.id)
+                ).trackName
+            }`,
+        });
 
         res.status(200).json({
             message: "unsubscriped successfully",

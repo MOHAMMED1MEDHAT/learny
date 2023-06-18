@@ -221,11 +221,13 @@ exports.getTotalEntitiesNums = async (req, res) => {
         ]);
 
         let stats = {};
-        stats.trackNums = trackNums[0].nums;
-        stats.courseNums = courseNums[0].nums;
-        stats.complaintNums = complaintNums[0].nums;
-        stats.testmonialNums = testmonialNums[0].nums;
-        stats.planNums = planNums[0].nums;
+        stats.trackNums = trackNums.length == 0 ? 0 : trackNums[0].nums;
+        stats.courseNums = courseNums.length == 0 ? 0 : courseNums[0].nums;
+        stats.complaintNums =
+            complaintNums.length == 0 ? 0 : complaintNums[0].nums;
+        stats.testmonialNums =
+            testmonialNums.length == 0 ? 0 : testmonialNums[0].nums;
+        stats.planNums = planNums.length == 0 ? 0 : planNums[0].nums;
 
         res.status(200).json({
             message: "success",
