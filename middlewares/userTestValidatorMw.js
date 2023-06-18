@@ -1,4 +1,4 @@
-const validator = require("./../util/userTestValidator");
+const validator = require("../util/userTestValidator");
 
 module.exports = (req, res, next) => {
     const valid = validator(req.body);

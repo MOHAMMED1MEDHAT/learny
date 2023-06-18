@@ -8,7 +8,7 @@ module.exports.calcGrade = async ({
     const test = await Test.findById(testId);
 
     let msg = "";
-    const answerRatio = 100 / test.questions.lenght;
+    const answerRatio = 100 / test.questions.length;
     let grade = 0;
 
     answers.map((ans) => {

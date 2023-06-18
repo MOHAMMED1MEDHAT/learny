@@ -88,13 +88,13 @@ exports.addUserAnswersToTestById = async (req, res) => {
 
         const { answers } = req.body;
 
-        const { grade, message } = userTestService.calcGrade(
+        const { grade, message } = await userTestService.calcGrade({
             UserTest,
             Test,
             userId,
             testId,
-            answers
-        );
+            answers,
+        });
 
         res.status(200).json({
             data: { grade, message },

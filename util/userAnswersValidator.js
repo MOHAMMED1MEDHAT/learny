@@ -10,13 +10,13 @@ const schema = {
                 type: "object",
                 properties: {
                     questionIdx: {
-                        type: "string",
+                        type: "integer",
                     },
                     answer: {
                         type: "string",
                     },
                 },
-                required: ["question", "answer"],
+                required: ["questionIdx", "answer"],
             },
         },
     },
