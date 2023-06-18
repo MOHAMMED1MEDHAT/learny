@@ -300,7 +300,7 @@ exports.subscripeToTrackByTrackId = async (req, res) => {
             message: `subsciped successfully to${
                 (
                     await Track.findById(req.params.id)
-                ).trackName
+                ).categoryName
             }`,
         });
 
@@ -351,7 +351,7 @@ exports.unsubscripeToTrackById = async (req, res) => {
             message: `unsubsciped successfully from${
                 (
                     await Track.findById(req.params.id)
-                ).trackName
+                ).categoryName
             }`,
         });
 
