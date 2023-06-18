@@ -82,27 +82,27 @@ exports.addTest = async (req, res) => {
 
 //test answers for each user
 exports.addUserAnswersToTestById = async (req, res) => {
-    try {
-        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
-        const testId = req.params.id;
+    // try {
+    const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+    const testId = req.params.id;
 
-        const { answers } = req.body;
+    const { answers } = req.body;
 
-        const { grade, message, correctAndNotObj } =
-            await userTestService.calcGrade({
-                UserTest,
-                Test,
-                userId,
-                testId,
-                answers,
-            });
-
-        res.status(200).json({
-            data: { grade, message, correctAndNotObj },
+    const { grade, message, correctAndNotObj } =
+        await userTestService.calcGrade({
+            UserTest,
+            Test,
+            userId,
+            testId,
+            answers,
         });
-    } catch (err) {
-        errorHandlerMw(err, res);
-    }
+
+    res.status(200).json({
+        data: { grade, message, correctAndNotObj },
+    });
+    // } catch (err) {
+    //     errorHandlerMw(err, res);
+    // }
 };
 
 //update test by test id

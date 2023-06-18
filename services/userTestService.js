@@ -12,7 +12,7 @@ module.exports.calcGrade = async ({
     let grade = 0;
     //TODO:
     //return the idx of the correctAnswer inside questions
-    let correctAndNotObj = {};
+    let correctAndNotObj = [];
 
     answers
         .map((ans) => {
@@ -26,19 +26,16 @@ module.exports.calcGrade = async ({
         .map((flag, idx) => {
             if (!flag) {
                 // to convert index of the answer to a,b,c,d
-                console.log(
-                    test.questionIdx[idx].answers.indexOf(
-                        test.questionIdx[idx].correctAnswer
+                const char = String.fromCharCode(
+                    test.questions[idx].answers.indexOf(
+                        test.questions[idx].correctAnswer
                     ) + 97
                 );
-                // const char = String.fromCharCode(
-                //     test.questionIdx[idx].answers.indexOf(
-                //         test.questionIdx[idx].correctAnswer
-                //     ) + 97
-                // );
-                correctAndNotObj.idx = `${char}:${test.questionIdx[idx].correctAnswer}`;
+                correctAndNotObj.push(
+                    `${char}:${test.questions[idx].correctAnswer}`
+                );
             } else {
-                correctAndNotObj.idx = flag;
+                correctAndNotObj.push(flag);
             }
         });
 
