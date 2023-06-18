@@ -1,10 +1,4 @@
-module.exports.calcGrade = async ({
-    UserTest,
-    Test,
-    userId,
-    testId,
-    answers,
-}) => {
+exports.calcGrade = async ({ UserTest, Test, userId, testId, answers }) => {
     const test = await Test.findById(testId);
 
     const answerRatio = 100 / test.questions.length;

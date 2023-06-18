@@ -11,6 +11,10 @@ const notificationSchema = new mongoose.Schema(
             trim: true,
             required: [true, "A notification must have a message"],
         },
+        createdAt: {
+            type: Date,
+            default: Date.now(),
+        },
     },
     {
         toJSON: { virtuals: true },

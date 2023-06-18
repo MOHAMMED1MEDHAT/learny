@@ -68,6 +68,7 @@ const userCoursesRouter = require("./routes/userCourses");
 const testmonialRouter = require("./routes/testmonials");
 const planRouter = require("./routes/plans");
 const dashboardRouter = require("./routes/dashboard");
+const notificationsRouter = require("./routes/notifications");
 
 app.use("/api/v1/user", userRouter); //test done
 // app.use("/api/v1/user", authRouter); //test done
@@ -80,7 +81,8 @@ app.use("/api/v1/complaint", complaintRouter); //test
 app.use("/api/v1/userCourse", userCoursesRouter); //test
 app.use("/api/v1/testmonial", testmonialRouter); //test
 app.use("/api/v1/plan", planRouter); //test
-app.use("/api/v1/dashboard", dashboardRouter);
+app.use("/api/v1/dashboard", dashboardRouter); //test
+app.use("/api/v1/notifications", notificationsRouter); //test
 
 const port = process.env.PORT;
 app.listen(port, () => {

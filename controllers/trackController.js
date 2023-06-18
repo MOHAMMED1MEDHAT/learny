@@ -297,7 +297,7 @@ exports.subscripeToTrackByTrackId = async (req, res) => {
 
         await addNotification({
             userId,
-            message: `subsciped successfully to${
+            message: `subsciped successfully to ${
                 (
                     await Track.findById(req.params.id)
                 ).categoryName
@@ -348,7 +348,7 @@ exports.unsubscripeToTrackById = async (req, res) => {
 
         await addNotification({
             userId,
-            message: `unsubsciped successfully from${
+            message: `unsubsciped successfully from ${
                 (
                     await Track.findById(req.params.id)
                 ).categoryName
