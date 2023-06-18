@@ -65,6 +65,14 @@ exports.addTest = async (req, res) => {
 
         const { testName, questions, successGrade } = req.body;
 
+        const testAddedBefore = await Test.findOne({
+            testName,
+        }).exec();
+
+        if (testAddedBefore) {
+            return res.status(409).json({ message: "this name is used" });
+        }
+
         const test = await Test.create({
             testName,
             questions,
