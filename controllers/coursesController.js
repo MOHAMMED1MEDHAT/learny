@@ -65,7 +65,7 @@ exports.addCourse = async (req, res) => {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        const { courseName, links, imageUrl } = req.body;
+        const { courseName, links, imageUrl, testId } = req.body;
         const courseAddedBefore = await Course.findOne({
             courseName,
         }).exec();
@@ -74,7 +74,12 @@ exports.addCourse = async (req, res) => {
             return res.status(409).json({ message: "this name is used" });
         }
 
-        const course = await Course.create({ courseName, links, imageUrl });
+        const course = await Course.create({
+            courseName,
+            links,
+            imageUrl,
+            testId,
+        });
 
         res.status(200).json({
             message: "course was added successfully",

@@ -4,35 +4,35 @@ const ajv = new Ajv();
 const schema = {
     type: "object",
     properties: {
-        courseName: {
+        testName: {
             type: "string",
         },
-        links: {
+        questions: {
             type: "array",
             items: {
                 type: "object",
                 properties: {
-                    link: {
+                    question: {
                         type: "string",
                     },
-                    title: {
-                        type: "string",
+                    answers: {
+                        type: "array",
+                        items: {
+                            type: "string",
+                        },
                     },
-                    rescource: {
+                    correctAnswer: {
                         type: "string",
                     },
                 },
-                required: ["link", "title"],
+                required: ["question", "answers", "correctAnswer"],
             },
         },
-        imageUrl: {
-            type: "string",
-        },
-        testId: {
+        successGrade: {
             type: "string",
         },
     },
-    required: ["courseName", "links", "imageUrl", "testId"],
+    required: ["testName", "questions", "successGrade"],
 };
 
 module.exports = ajv.compile(schema);

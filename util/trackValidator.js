@@ -9,11 +9,17 @@ const schema = {
         },
         roadmap: {
             type: "array",
+            items: {
+                type: "string",
+            },
         },
         subscriptionLevel: {
             type: "string",
         },
         imageUrl: {
+            type: "string",
+        },
+        testId: {
             type: "string",
         },
         courses: {
@@ -35,6 +41,7 @@ const schema = {
         "subscriptionLevel",
         "imageUrl",
         "courses",
+        "test",
     ],
 };
 

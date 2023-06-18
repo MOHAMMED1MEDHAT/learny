@@ -12,12 +12,12 @@ const errorHandler = require("./middlewares/errorHandlerMw");
 const app = express();
 
 // FIXME: ENABLE ON DEPLOYMENT
-process.on("uncaughtException", (exception) => {
-    console.log("uncaught Exception" + exception);
-});
-process.on("unhandledRejection", (exception) => {
-    console.log("uncaught async Exception" + exception);
-});
+// process.on("uncaughtException", (exception) => {
+//     console.log("uncaught Exception" + exception);
+// });
+// process.on("unhandledRejection", (exception) => {
+//     console.log("uncaught async Exception" + exception);
+// });
 
 //mongoose connection setup
 //FIXME:change to ATLAS_CONNECTION_STRING
@@ -63,6 +63,7 @@ const profile = require("./routes/profile");
 const trackRouter = require("./routes/track");
 const complaintRouter = require("./routes/complaints");
 const coursesRouter = require("./routes/courses");
+const testRouter = require("./routes/test");
 const userCoursesRouter = require("./routes/userCourses");
 const testmonialRouter = require("./routes/testmonials");
 const planRouter = require("./routes/plans");
@@ -72,9 +73,10 @@ app.use("/api/v1/user", userRouter); //test done
 // app.use("/api/v1/user", authRouter); //test done
 app.use("/api/v1/upload", upload); //test done
 app.use("/api/v1/profile", profile); //test done
-app.use("/api/v1/track", trackRouter); //test
+app.use("/api/v1/track", trackRouter); //test done
+app.use("/api/v1/course", coursesRouter); //test done
+app.use("/api/v1/test", testRouter); //test
 app.use("/api/v1/complaint", complaintRouter); //test
-app.use("/api/v1/course", coursesRouter); //test
 app.use("/api/v1/userCourse", userCoursesRouter); //test
 app.use("/api/v1/testmonial", testmonialRouter); //test
 app.use("/api/v1/plan", planRouter); //test

@@ -39,6 +39,11 @@ const trackSchema = new mongoose.Schema(
             required: [true, "A track must have a imageUrl"],
         },
         courses: [coursesSchema],
+        testId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "test",
+            required: [true, "A track must have a test"],
+        },
         subscripers: [subscripersSchema],
     },
     {

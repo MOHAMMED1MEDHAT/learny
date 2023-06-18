@@ -9,6 +9,9 @@ const schema = {
         },
         features: {
             type: "array",
+            items: {
+                type: "string",
+            },
         },
         costOfPlan: {
             type: "string",

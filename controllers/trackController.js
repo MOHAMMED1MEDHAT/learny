@@ -22,7 +22,7 @@ exports.getAllTracks = async (req, res) => {
             path: "courses",
             populate: {
                 path: "courseId",
-                select: "courseName",
+                select: "courseName imageUrl",
             },
         });
         // const tracks = await Track.find();
@@ -84,8 +84,14 @@ exports.addTrack = async (req, res) => {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        const { categoryName, roadmap, subscriptionLevel, imageUrl, courses } =
-            req.body;
+        const {
+            categoryName,
+            roadmap,
+            subscriptionLevel,
+            imageUrl,
+            courses,
+            testId,
+        } = req.body;
         const trackAddedBefore = await Track.findOne({
             categoryName,
         }).exec();
@@ -100,6 +106,7 @@ exports.addTrack = async (req, res) => {
             subscriptionLevel,
             imageUrl,
             courses,
+            testId,
         });
 
         res.status(200).json({
@@ -364,3 +371,6 @@ exports.deleteTrackByTrackId = async (req, res) => {
         errorHandlerMw(err, res);
     }
 };
+
+//TODO:
+//1- refactor the build of services to be in track services class

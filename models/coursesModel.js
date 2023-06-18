@@ -46,6 +46,11 @@ const courseSchema = new mongoose.Schema(
             default: "ImageUrl",
             required: [true, "A course must have a imageUrl"],
         },
+        testId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "test",
+            required: [true, "A course must have a test"],
+        },
         subscripers: [subscripersSchema],
     },
     {
