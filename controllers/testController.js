@@ -63,11 +63,12 @@ exports.addTest = async (req, res) => {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        const { testName, questions } = req.body;
+        const { testName, questions, successGrade } = req.body;
 
         const test = await Test.create({
             testName,
             questions,
+            successGrade,
         });
 
         res.status(200).json({
