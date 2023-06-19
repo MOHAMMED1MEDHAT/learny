@@ -124,13 +124,14 @@ exports.updateTestById = async (req, res) => {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const { testName, questions } = req.body;
+        const { testName, questions, successGrade } = req.body;
 
         const test = await Test.findByIdAndUpdate(
             req.params.id,
             {
                 testName,
                 questions,
+                successGrade,
             },
             { runValidators: true, new: true }
         ).exec();
