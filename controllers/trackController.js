@@ -25,6 +25,8 @@ exports.getAllTracks = async (req, res) => {
                 path: "courseId",
                 select: "courseName imageUrl",
             },
+        }).populate({
+            path: "testId",
         });
         // const tracks = await Track.find();
         if (tracks.length == 0) {
@@ -64,6 +66,9 @@ exports.getTrackById = async (req, res) => {
                     path: "subscriperId",
                     select: "name",
                 },
+            })
+            .populate({
+                path: "testId",
             })
             .exec();
 
@@ -131,17 +136,24 @@ exports.updateTrackById = async (req, res) => {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const { categoryName, Roadmap, subscriptionLevel, imageUrl, courses } =
-            req.body;
+        const {
+            categoryName,
+            roadmap,
+            subscriptionLevel,
+            imageUrl,
+            courses,
+            testId,
+        } = req.body;
 
         const track = await Track.findByIdAndUpdate(
             req.params.id,
             {
                 categoryName,
-                Roadmap,
+                roadmap,
                 subscriptionLevel,
                 imageUrl,
                 courses,
+                testId,
             },
             { runValidators: true, new: true }
         ).exec();

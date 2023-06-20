@@ -66,6 +66,7 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        sockets: [String],
     },
     {
         toJSON: { virtuals: true },

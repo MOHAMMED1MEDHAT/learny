@@ -9,9 +9,19 @@ const planSchema = new mongoose.Schema(
         },
         features: [String],
         costOfPlan: {
-            type: String,
+            type: Number,
             trim: true,
             required: [true, "A plan must have a costOfPlan"],
+        },
+        priceDiscount: {
+            type: Number,
+            validate: {
+                validator: function (value) {
+                    return value < this.costOfPlan;
+                },
+                message:
+                    "dicount price ({VALUE}) should be blow the regular price",
+            },
         },
         subscriptionType: {
             type: String,

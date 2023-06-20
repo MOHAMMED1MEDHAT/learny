@@ -11,7 +11,7 @@ const errorHandler = require("./middlewares/errorHandlerMw");
 
 const app = express();
 
-// FIXME: ENABLE ON DEPLOYMENT
+// // FIXME: ENABLE ON DEPLOYMENT
 process.on("uncaughtException", (exception) => {
     console.log("uncaught Exception" + exception);
 });
@@ -87,10 +87,81 @@ app.use("/api/v1/dashboard", dashboardRouter); //test
 app.use("/api/v1/notifications", notificationsRouter); //test
 
 const port = process.env.PORT;
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`listening ....!!! on port:${port}`);
 });
 
 /*TODO:
 1- customize the validator to work best  for every state
 */
+
+//sockets logic---------------------------
+const jwt = require("jsonwebtoken");
+const config = require("config");
+const jwtSCRT = config.get("env_var.jwtScreteKey");
+
+const User = require("./models/userModel");
+
+const io = require("socket.io")(server);
+
+io.on("connection", function (socket) {
+    console.log("Connected", socket.id);
+
+    socket.on("setUpConnection", async function ({ token, socketId }) {
+        const { userId } = jwt.verify(token, jwtSCRT);
+        let sockets = (await User.findById(userId)).sockets;
+        //TODO:change it to socketId from client
+        sockets.push(socket.id);
+        await User.findByIdAndUpdate(userId, {
+            sockets,
+        });
+        console.log(
+            `socketId:${socketId} was add to userId:${userId} and sockets:${sockets}`
+        );
+    });
+
+    socket.on("deleteConnection", async function ({ token, socketId }) {
+        const { userId } = jwt.verify(token, jwtSCRT);
+        let sockets = (await User.findById(userId)).sockets;
+        //TODO:change it to socketId from client
+        if (sockets.indexOf(socket.id) != -1) {
+            sockets.splice(sockets.indexOf(socket.id), 1);
+        } else {
+            console.log(socket.id, "Not found");
+        }
+        await User.findByIdAndUpdate(userId, {
+            sockets,
+        });
+        console.log(
+            `socketId:${socketId} was removed from userId:${userId} and sockets:${sockets}`
+        );
+    });
+
+    socket.on("userSendNotification", async function ({ token, msg }) {
+        const { userId } = jwt.verify(token, jwtSCRT);
+        let sockets = (await User.findById(userId)).sockets;
+
+        const admins = await User.find({ isAdmin: true });
+        const adminsSockets = admins.map((admin) => admin.sockets);
+        adminsSockets.map((adminSocket) => sockets.concat(adminSocket));
+
+        io.to(sockets).emit("getNotification", msg);
+    });
+
+    socket.on("adminSendNotification", async function ({ msg }) {
+        io.emit("getNotification", msg);
+    });
+
+    socket.on("msg_from_client", function (from, msg) {
+        console.log("Message is " + from, msg);
+    });
+    socket.on("disconnect", function (msg) {
+        console.log("Disconnected");
+    });
+});
+
+let count = 0;
+setInterval(function () {
+    io.emit("msg_to_client", "client", "test msg" + count);
+    count++;
+}, 1000);
