@@ -96,72 +96,54 @@ const server = app.listen(port, () => {
 */
 
 //sockets logic---------------------------
-const jwt = require("jsonwebtoken");
-const config = require("config");
-const jwtSCRT = config.get("env_var.jwtScreteKey");
-
-const User = require("./models/userModel");
-
-const io = require("socket.io")(server);
+const {
+    setUpConnection,
+    deleteConnection,
+    userSendNotification,
+} = require("./util/socketsHandler");
+const io = require("socket.io")(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+        allowEIO: true,
+    },
+});
 
 io.on("connection", function (socket) {
     console.log("Connected", socket.id);
 
+    const socketId = socket.id;
+
     socket.on("setUpConnection", async function ({ token, socketId }) {
-        const { userId } = jwt.verify(token, jwtSCRT);
-        let sockets = (await User.findById(userId)).sockets;
-        //TODO:change it to socketId from client
-        sockets.push(socket.id);
-        await User.findByIdAndUpdate(userId, {
-            sockets,
-        });
-        console.log(
-            `socketId:${socketId} was add to userId:${userId} and sockets:${sockets}`
-        );
+        try {
+            await setUpConnection(token, socketId);
+        } catch (error) {
+            console.log(error.message);
+        }
     });
 
     socket.on("deleteConnection", async function ({ token, socketId }) {
-        const { userId } = jwt.verify(token, jwtSCRT);
-        let sockets = (await User.findById(userId)).sockets;
-        //TODO:change it to socketId from client
-        if (sockets.indexOf(socket.id) != -1) {
-            sockets.splice(sockets.indexOf(socket.id), 1);
-        } else {
-            console.log(socket.id, "Not found");
+        try {
+            await deleteConnection(token, socketId);
+        } catch (error) {
+            console.log(error.message);
         }
-        await User.findByIdAndUpdate(userId, {
-            sockets,
-        });
-        console.log(
-            `socketId:${socketId} was removed from userId:${userId} and sockets:${sockets}`
-        );
     });
 
     socket.on("userSendNotification", async function ({ token, msg }) {
-        const { userId } = jwt.verify(token, jwtSCRT);
-        let sockets = (await User.findById(userId)).sockets;
-
-        const admins = await User.find({ isAdmin: true });
-        const adminsSockets = admins.map((admin) => admin.sockets);
-        adminsSockets.map((adminSocket) => sockets.concat(adminSocket));
-
-        io.to(sockets).emit("getNotification", msg);
+        try {
+            const sockets = await userSendNotification(token);
+            io.to(sockets.concat(socketId)).emit("userGetNotification", msg);
+        } catch (error) {
+            console.log(error.message);
+        }
     });
 
     socket.on("adminSendNotification", async function ({ msg }) {
-        io.emit("getNotification", msg);
+        io.emit("adminGetNotification", msg);
     });
 
-    socket.on("msg_from_client", function (from, msg) {
-        console.log("Message is " + from, msg);
-    });
     socket.on("disconnect", function (msg) {
         console.log("Disconnected");
     });
 });
-
-let count = 0;
-setInterval(function () {
-    io.emit("msg_to_client", "client", "test msg" + count);
-    count++;
-}, 1000);
