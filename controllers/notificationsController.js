@@ -33,6 +33,12 @@ exports.deleteAllNotificationsByUserId = async (req, res) => {
 
         const { deletedCount } = await Notifications.deleteMany({ userId });
 
+        if (deletedCount == 0) {
+            return res
+                .status(204)
+                .json({ message: "No notifications to delete" });
+        }
+
         res.status(200).json({
             message: `All User Notification deleted successfully count:${deletedCount}`,
         });
