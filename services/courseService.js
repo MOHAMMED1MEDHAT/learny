@@ -1,5 +1,5 @@
 exports.subscripe = async ({ Course, userId, courseId }) => {
-    console.log(courseId);
+    // console.log(courseId);
     const { subscripers } = await Course.findById(courseId).exec();
     for (const subscriper of subscripers) {
         if (subscriper.subscriperId == userId) {
@@ -88,7 +88,7 @@ class CourseService {
     }
 
     async subscripe(userId, courseId) {
-        console.log(courseId);
+        // console.log(courseId);
         const { subscripers } = await this.Course.findById(courseId).exec();
         for (const subscriper of subscripers) {
             if (subscriper.subscriperId == userId) {

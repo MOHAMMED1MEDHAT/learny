@@ -32,8 +32,8 @@ exports.getAllComplaints = async (req, res) => {
             data: { complaints },
         });
     } catch (err) {
-        console.log(err);
-        // errorHandlerMw(err, res);
+        // console.log(err);
+        errorHandlerMw(err, res);
     }
 };
 

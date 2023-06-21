@@ -10,7 +10,7 @@ exports.createCertificate = async ({ certificateLink, name }) => {
             )}`,
         });
 
-        console.log(filename);
+        // console.log(filename);
 
         // (A) LOAD MODULES
         const { registerFont, createCanvas, loadImage } = require("canvas");

@@ -60,7 +60,7 @@ exports.resetPasswordController = async (req, res, next) => {
 
 exports.login = async (req, res) => {
     try {
-        console.log(req.body);
+        // console.log(req.body);
         const { email, password } = req.body;
 
         const user = await User.findOne({ email }).exec();

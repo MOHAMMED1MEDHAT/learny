@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     if (valid) {
         next();
     } else {
-        console.log(req.body);
+        // console.log(req.body);
         res.status(403).json({ message: "forbidden command" });
     }
 };

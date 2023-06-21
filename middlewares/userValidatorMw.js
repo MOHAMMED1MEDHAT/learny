@@ -5,9 +5,7 @@ module.exports = (req, res, next) => {
     if (vaild) {
         next();
     } else {
-        //test-----
-        console.log(req.body);
-        //-----------------------
+        // console.log(req.body);
         res.status(403).send("forbidden comand");
     }
 };

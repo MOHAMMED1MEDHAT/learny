@@ -32,7 +32,8 @@ const requestPasswordReset = async (email) => {
         );
         return link;
     } catch (err) {
-        console.log(err);
+        // console.log(err);
+        throw new Error("Error in reset password request");
     }
 };
 
@@ -66,7 +67,8 @@ const resetPassword = async (userId, token, password) => {
         await passwordResetToken.deleteOne();
         return true;
     } catch (err) {
-        console.log(err);
+        // console.log(err);
+        throw new Error("Error in reset password");
     }
 };
 

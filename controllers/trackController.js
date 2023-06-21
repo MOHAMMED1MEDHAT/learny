@@ -250,7 +250,7 @@ exports.deleteCoursesFromTrack = async (req, res) => {
                 }
             });
 
-        console.log(trackOldCourses.length);
+        // console.log(trackOldCourses.length);
 
         const track = await Track.findByIdAndUpdate(
             req.params.id,

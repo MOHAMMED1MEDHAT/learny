@@ -58,7 +58,7 @@ exports.updateWatchedTimeByCourseId = async (req, res) => {
             },
             { returnOriginal: false }
         ).exec();
-        console.log(userCourse);
+        // console.log(userCourse);
         if (!userCourse) {
             return res.status(400).json({ message: "Bad Request" });
         }

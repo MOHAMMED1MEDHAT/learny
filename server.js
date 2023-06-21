@@ -109,7 +109,7 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", function (socket) {
-    console.log("Connected", socket.id);
+    console.log(`user ${socket.id} Connected`);
 
     socket.on("setUpConnection", async function ({ token, socketId }) {
         try {
@@ -142,7 +142,7 @@ io.on("connection", function (socket) {
     });
 
     socket.on("disconnect", function (msg) {
-        console.log("Disconnected");
+        console.log(`user ${socket.id} Disconnected`);
     });
 });
 
