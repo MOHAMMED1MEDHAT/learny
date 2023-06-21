@@ -21,7 +21,9 @@ exports.getAllCourses = async (req, res) => {
             .project()
             .pagination();
 
-        const courses = await APIfeaturesObj.MongooseQuery;
+        const courses = await APIfeaturesObj.MongooseQuery.populate({
+            path: "testId",
+        });
         if (courses.length == 0) {
             return res
                 .status(204)
@@ -45,7 +47,11 @@ exports.getCourseByCourseId = async (req, res) => {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const course = await Course.findById(req.params.id).exec();
+        const course = await Course.findById(req.params.id)
+            .populate({
+                path: "testId",
+            })
+            .exec();
 
         if (!course) {
             return res.status(204).json({ message: "course not found" });
