@@ -66,6 +66,7 @@ const coursesRouter = require("./routes/courses");
 const testRouter = require("./routes/test");
 const userTestRouter = require("./routes/userTest");
 const userCoursesRouter = require("./routes/userCourses");
+const userCertificateRouter = require("./routes/UserCertificates");
 const testmonialRouter = require("./routes/testmonials");
 const planRouter = require("./routes/plans");
 const dashboardRouter = require("./routes/dashboard");
@@ -78,7 +79,8 @@ app.use("/api/v1/profile", profile); //test done
 app.use("/api/v1/track", trackRouter); //test done
 app.use("/api/v1/course", coursesRouter); //test done
 app.use("/api/v1/test", testRouter); //test
-app.use("/api/v1/usertest", userTestRouter); //test
+app.use("/api/v1/userTest", userTestRouter); //test
+app.use("/api/v1/userCertificate", userCertificateRouter); //test
 app.use("/api/v1/complaint", complaintRouter); //test
 app.use("/api/v1/userCourse", userCoursesRouter); //test
 app.use("/api/v1/testmonial", testmonialRouter); //test

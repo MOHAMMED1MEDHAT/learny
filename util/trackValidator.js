@@ -22,6 +22,9 @@ const schema = {
         testId: {
             type: "string",
         },
+        certificateLink: {
+            type: "string",
+        },
         courses: {
             type: "array",
             items: {
@@ -42,6 +45,7 @@ const schema = {
         "imageUrl",
         "courses",
         "testId",
+        "certificateLink",
     ],
 };
 

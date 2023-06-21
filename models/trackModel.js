@@ -45,6 +45,11 @@ const trackSchema = new mongoose.Schema(
             required: [true, "A track must have a test"],
         },
         subscripers: [subscripersSchema],
+        certificateLink: {
+            type: String,
+            trem: true,
+            required: [true, "A Track must have a certificateLink"],
+        },
     },
     {
         toJSON: { virtuals: true },

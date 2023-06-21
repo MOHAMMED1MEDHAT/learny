@@ -4,7 +4,7 @@ const jwtSCRT = config.get("env_var.jwtScreteKey");
 
 const User = require("./../models/userModel");
 
-module.exports.setUpConnection = async (token, socketId) => {
+exports.setUpConnection = async (token, socketId) => {
     try {
         const { userId } = jwt.verify(token, jwtSCRT);
         let sockets = (await User.findById(userId)).sockets;
@@ -18,7 +18,7 @@ module.exports.setUpConnection = async (token, socketId) => {
     }
 };
 
-module.exports.deleteConnection = async (token, socketId) => {
+exports.deleteConnection = async (token, socketId) => {
     try {
         const { userId } = jwt.verify(token, jwtSCRT);
         let sockets = (await User.findById(userId)).sockets;
@@ -35,7 +35,7 @@ module.exports.deleteConnection = async (token, socketId) => {
     }
 };
 
-module.exports.userSendNotification = async (token) => {
+exports.userSendNotification = async (token) => {
     try {
         const { userId } = jwt.verify(token, jwtSCRT);
         let sockets = (await User.findById(userId)).sockets;
