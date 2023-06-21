@@ -102,6 +102,7 @@ const {
     setUpConnection,
     deleteConnection,
     userSendNotification,
+    adminSendNotification,
 } = require("./util/socketsHandler");
 const io = require("socket.io")(server, {
     cors: {
@@ -113,8 +114,6 @@ const io = require("socket.io")(server, {
 
 io.on("connection", function (socket) {
     console.log("Connected", socket.id);
-
-    const socketId = socket.id;
 
     socket.on("setUpConnection", async function ({ token, socketId }) {
         try {
@@ -134,14 +133,15 @@ io.on("connection", function (socket) {
 
     socket.on("userSendNotification", async function ({ token, msg }) {
         try {
-            const sockets = await userSendNotification(token);
-            io.to(sockets.concat(socketId)).emit("userGetNotification", msg);
+            const sockets = await userSendNotification(token, msg);
+            io.to(sockets).emit("userGetNotification", msg);
         } catch (error) {
             console.log(error.message);
         }
     });
 
-    socket.on("adminSendNotification", async function ({ msg }) {
+    socket.on("adminSendNotification", async function ({ token, msg }) {
+        await adminSendNotification(token, msg);
         io.emit("adminGetNotification", msg);
     });
 

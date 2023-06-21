@@ -1,5 +1,6 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const UserCertificate = require("./../models/userCertificatesModel");
+const User = require("./../models/userModel");
 
 const { createCertificate } = require("./../services/UserCertificateService");
 
@@ -56,7 +57,9 @@ exports.addUserCertificate = async (req, res) => {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         const { certificateLink, grade } = req.body;
 
-        certificateLink = await createCertificate({ certificateLink });
+        const { name } = await User.findById(userId);
+
+        certificateLink = await createCertificate({ certificateLink, name });
 
         const userCertificate = await UserCertificate.create({
             userId,
