@@ -26,3 +26,17 @@ exports.getAllNotificationsByUserId = async (req, res) => {
         errorHandlerMw(err, res);
     }
 };
+
+exports.deleteAllNotificationsByUserId = async (req, res) => {
+    try {
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+
+        const { deletedCount } = await Notifications.deleteMany({ userId });
+
+        res.status(200).json({
+            message: `All User Notification deleted successfully count:${deletedCount}`,
+        });
+    } catch (err) {
+        errorHandlerMw(err, res);
+    }
+};

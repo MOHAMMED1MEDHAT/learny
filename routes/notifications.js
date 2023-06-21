@@ -4,6 +4,6 @@ const router = require("express").Router();
 //get all user notification
 router.get("/", Notification.getAllNotificationsByUserId);
 
-// router.get("/:id", Plan.getPlanById);
+router.delete("/", Notification.deleteAllNotificationsByUserId);
 
 module.exports = router;

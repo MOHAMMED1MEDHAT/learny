@@ -93,10 +93,6 @@ const server = app.listen(port, () => {
     console.log(`listening ....!!! on port:${port}`);
 });
 
-/*TODO:
-1- customize the validator to work best  for every state
-*/
-
 //sockets logic---------------------------
 const {
     setUpConnection,
@@ -149,3 +145,7 @@ io.on("connection", function (socket) {
         console.log("Disconnected");
     });
 });
+
+/*TODO:
+1- customize the validator to work best  for every state
+*/
