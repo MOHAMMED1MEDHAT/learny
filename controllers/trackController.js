@@ -97,6 +97,7 @@ exports.addTrack = async (req, res) => {
             imageUrl,
             courses,
             testId,
+            certificateLink,
         } = req.body;
         const trackAddedBefore = await Track.findOne({
             categoryName,
@@ -113,6 +114,7 @@ exports.addTrack = async (req, res) => {
             imageUrl,
             courses,
             testId,
+            certificateLink,
         });
 
         res.status(200).json({
