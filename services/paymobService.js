@@ -74,6 +74,6 @@ exports.getPaymobPaymentLink = async ({ user, cost }) => {
             orderId: id,
         };
     } catch (error) {
-        throw new Error("error in paymob payment service");
+        throw new Error(`Error in paymob payment service:${error}`);
     }
 };
