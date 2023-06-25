@@ -3,7 +3,6 @@ const download = require("image-downloader");
 const PdfDocument = require("pdfkit");
 const { createCanvas, loadImage } = require("canvas");
 const { cloudinary } = require("./../util/uploadHandler");
-// const { height } = require("pdfkit/js/page");
 
 //TODO:Remove that fucking callback hell (done)
 exports.createCertificate = async ({ certificateLink, name }) => {
@@ -66,25 +65,25 @@ exports.createCertificate = async ({ certificateLink, name }) => {
             }
         );
 
-        //4-delete all certificate assets from local storage (images,pdfs)
         const filePath = filename;
-        //delete from images
-        fs.unlink(filePath, (err) => {
-            if (err) {
-                console.error("Error deleting file:", err);
-                return;
-            }
-        });
+        // //4-delete all certificate assets from local storage (images,pdfs)
+        // //delete from images
+        // fs.unlink(filePath, (err) => {
+        //     if (err) {
+        //         console.error("Error deleting file:", err);
+        //         return;
+        //     }
+        // });
 
-        //delete from pdfs
-        fs.unlink(filePath.replace("images", "pdfs"), (err) => {
-            if (err) {
-                console.error("Error deleting file:", err);
-                return;
-            }
-        });
+        // //delete from pdfs
+        // fs.unlink(filePath.replace("images", "pdfs"), (err) => {
+        //     if (err) {
+        //         console.error("Error deleting file:", err);
+        //         return;
+        //     }
+        // });
 
-        return userCertificateLink;
+        return { userCertificateLink, filePath };
     } catch (error) {
         console.log(error, error.stack);
         throw new Error("Error in creating certificateLink", error.message);
