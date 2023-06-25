@@ -94,11 +94,27 @@ exports.subscripeToPlan = async (req, res) => {
 
 exports.postPaymentOps = async (req, res) => {
     try {
+        let message = "";
+
         const { order, success } = req.query;
+
         const paymentRequest = await PaymentRequest.findOne({ orderId: order });
 
+        if (!success) {
+            message = `subscription Faild to plan ${paymentRequest.planSubscriptionType}`;
+        } else {
+            await User.findByIdAndUpdate(paymentRequest.userId, {
+                subscription: paymentRequest.planSubscriptionType,
+            });
+
+            message = `subscriped successfully to plan ${paymentRequest.planSubscriptionType}`;
+        }
+
+        await PaymentRequest.findByIdAndDelete(paymentRequest._id);
+
         res.status(200).json({
-            message: "success",
+            message,
+            success,
             paymentRequest,
         });
     } catch (err) {
