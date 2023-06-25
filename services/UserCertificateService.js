@@ -70,20 +70,20 @@ exports.createCertificate = async ({ certificateLink, name }) => {
         //4-delete all certificate assets from local storage (images,pdfs)
         const filePath = filename;
         //delete from images
-        fs.unlink(filePath, (err) => {
-            if (err) {
-                console.log("Error deleting file:", err);
-                return;
-            }
-        });
+        // fs.unlink(filePath, (err) => {
+        //     if (err) {
+        //         console.log("Error deleting file:", err);
+        //         return;
+        //     }
+        // });
 
-        //delete from pdfs
-        fs.unlink(filePath.replace("images", "pdfs"), (err) => {
-            if (err) {
-                console.log("Error deleting file:", err);
-                return;
-            }
-        });
+        // //delete from pdfs
+        // fs.unlink(filePath.replace("images", "pdfs"), (err) => {
+        //     if (err) {
+        //         console.log("Error deleting file:", err);
+        //         return;
+        //     }
+        // });
 
         return userCertificateLink;
     } catch (error) {
