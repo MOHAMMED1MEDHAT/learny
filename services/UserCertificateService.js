@@ -49,8 +49,8 @@ exports.createCertificate = async ({ certificateLink, name }) => {
         ctx.fillText(sText, x, y);
 
         // SAVE
-        const out = fs.createWriteStream(sSave);
-        const stream = canvas.createJPEGStream();
+        const out = fs.createWriteStream(sSave),
+            stream = canvas.createJPEGStream();
         stream.pipe(out);
         out.on("finish", () => console.log("Done"));
 
@@ -86,8 +86,8 @@ exports.createCertificate = async ({ certificateLink, name }) => {
 
         return userCertificateLink;
     } catch (error) {
-        console.log(error);
-        throw new Error("Error in creating certificateLink", error);
+        console.log(error, error.stack);
+        throw new Error("Error in creating certificateLink", error.message);
     }
 };
 
