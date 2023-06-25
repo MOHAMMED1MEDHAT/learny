@@ -86,7 +86,8 @@ exports.createCertificate = async ({ certificateLink, name }) => {
 
         return userCertificateLink;
     } catch (error) {
-        throw new Error("Error in creating certificateLink", error.message);
+        console.log(error);
+        throw new Error("Error in creating certificateLink");
     }
 };
 
