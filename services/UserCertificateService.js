@@ -16,7 +16,7 @@ exports.createCertificate = async ({ certificateLink, name }) => {
                 certificateLink.length - 3
             )}`,
         });
-
+        console.log("working");
         //2- write user name on certificate
         //LOAD MODULES
         //SETTINGS - CHANGE FONT TO YOUR OWN!
@@ -71,7 +71,7 @@ exports.createCertificate = async ({ certificateLink, name }) => {
         //delete from images
         fs.unlink(filePath, (err) => {
             if (err) {
-                console.error("Error deleting file:", err);
+                console.log("Error deleting file:", err);
                 return;
             }
         });
@@ -79,7 +79,7 @@ exports.createCertificate = async ({ certificateLink, name }) => {
         //delete from pdfs
         fs.unlink(filePath.replace("images", "pdfs"), (err) => {
             if (err) {
-                console.error("Error deleting file:", err);
+                console.log("Error deleting file:", err);
                 return;
             }
         });
