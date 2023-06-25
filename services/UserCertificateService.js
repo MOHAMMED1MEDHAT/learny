@@ -66,7 +66,7 @@ exports.createCertificate = async ({ certificateLink, name }) => {
         );
 
         const filePath = filename;
-        // //4-delete all certificate assets from local storage (images,pdfs)
+        //4-delete all certificate assets from local storage (images,pdfs)
         // //delete from images
         // fs.unlink(filePath, (err) => {
         //     if (err) {
