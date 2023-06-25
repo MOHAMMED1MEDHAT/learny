@@ -88,6 +88,13 @@ app.use("/api/v1/plan", planRouter); //test
 app.use("/api/v1/dashboard", dashboardRouter); //test
 app.use("/api/v1/notifications", notificationsRouter); //test
 
+app.all("*", (req, res, next) => {
+    res.status(404).json({
+        status: "fail",
+        message: `can't find ${req.originalUrl} on this server`,
+    });
+});
+
 const port = process.env.PORT;
 const server = app.listen(port, () => {
     console.log(`listening ....!!! on port:${port}`);

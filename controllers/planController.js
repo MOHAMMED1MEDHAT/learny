@@ -100,7 +100,7 @@ exports.postPaymentOps = async (req, res) => {
 
         const paymentRequest = await PaymentRequest.findOne({ orderId: order });
 
-        if (!success) {
+        if (success === "false") {
             message = `subscription Faild to plan ${paymentRequest.planSubscriptionType}`;
         } else {
             await User.findByIdAndUpdate(paymentRequest.userId, {
