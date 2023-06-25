@@ -6,11 +6,14 @@ const paymentRequestSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "user",
         },
+        orderId: {
+            type: Number,
+        },
         planId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "plan",
         },
-        planName: {
+        planSubscriptionType: {
             type: String,
             trim: true,
             required: [true, "A plan must have a planName"],

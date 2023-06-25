@@ -9,9 +9,11 @@ router.get("/", Plan.getAllPlans);
 
 router.get("/:id", Plan.getPlanById);
 
-router.get("/payment/paymob/:id", Plan.addPlan);
+router.get("/payment/paymob/callback", Plan.postPaymentOps);
 
-router.get("/payment/paymob/check/", Plan.addPlan);
+router.get("/payment/paymob/:id", Plan.subscripeToPlan);
+
+// router.get("/payment/paymob/check/", Plan.addPlan);
 
 router.post("/", validator, Plan.addPlan);
 

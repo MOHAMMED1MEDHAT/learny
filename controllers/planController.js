@@ -1,8 +1,9 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Plan = require("../models/plansModel");
+const User = require("../models/userModel");
 const PaymentRequest = require("../models/paymentRequestsModel");
 const APIfeatures = require("./../util/queryHandler");
-const paymobService = require("./../services/paymobService");
+const { getPaymobPaymentLink } = require("./../services/paymobService");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -61,19 +62,47 @@ exports.subscripeToPlan = async (req, res) => {
         //A.1: get the paymet data
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
+        const user = await User.findById(userId);
+        //A.2:get plan data
         const plan = await Plan.findById(req.params.id);
-        //A.2: create paymentRequest
+
+        //A.3: calculate the plan cost
+        const cost =
+            (plan.costOfPlan - plan.costOfPlan * plan.priceDiscount) * 100;
+
+        //A.4: contact with paymob API
+        const { iframeLink, orderId } = await getPaymobPaymentLink({
+            user,
+            cost,
+        });
+
+        //A.5: create paymentRequest
         await PaymentRequest.create({
             userId,
             planId: plan._id,
-            planName: plan.planName,
+            orderId,
+            planSubscriptionType: plan.subscriptionType,
         });
 
-        //A.3: calculate the plan cost
-        const cost = plan.costOfPlan - plan.costOfPlan * plan.priceDiscount;
-
-        //A.4: contact with paymob API
+        res.status(200).json({
+            iframeLink,
+        });
     } catch (err) {
+        errorHandlerMw(err, res);
+    }
+};
+
+exports.postPaymentOps = async (req, res) => {
+    try {
+        const { order, success } = req.query;
+        const paymentRequest = await PaymentRequest.findOne({ orderId: order });
+
+        res.status(200).json({
+            message: "success",
+            paymentRequest,
+        });
+    } catch (err) {
+        // console.log(err);
         errorHandlerMw(err, res);
     }
 };

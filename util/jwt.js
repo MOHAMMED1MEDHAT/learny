@@ -11,6 +11,7 @@ function auth() {
         // isRevoked: isRevoked
     }).unless({
         path: [
+            "/",
             "/api/v1/user/login",
             "/api/v1/user/signup",
             "/api/v1/user/passwordReset",
@@ -18,6 +19,7 @@ function auth() {
             "/api/v1/user/logout",
             "/api/v1/upload/image",
             "/api/v1/testmonial",
+            "/api/v1/plan/payment/paymob/callback",
         ],
     });
 }
