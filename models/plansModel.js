@@ -22,6 +22,7 @@ const planSchema = new mongoose.Schema(
                 message:
                     "dicount price ({VALUE}) should be blow the regular price",
             },
+            default: 0,
         },
         subscriptionType: {
             type: String,

@@ -11,4 +11,6 @@ router.get("/:id", UserCertificate.getAllUserCertificateById);
 
 router.post("/", validator, UserCertificate.addUserCertificate);
 
+router.get("/download/:id", UserCertificate.downloadCertificate);
+
 module.exports = router;

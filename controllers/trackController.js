@@ -2,6 +2,7 @@ const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Track = require("../models/trackModel");
 const { addNotification } = require("./../services/notificationService");
 const APIfeatures = require("./../util/queryHandler");
+const { cloudinary } = require("./../util/uploadHandler");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -395,6 +396,20 @@ exports.deleteTrackByTrackId = async (req, res) => {
         if (!track) {
             return res.status(400).json({ message: "Bad Request" });
         }
+
+        const TrackImages = {};
+        TrackImages.trackImageId = track.imageUrl.slice(
+            track.imageUrl.lastIndexOf("/") + 1,
+            -4
+        );
+
+        TrackImages.certificateLinkId = track.certificateLink.slice(
+            track.certificateLink.lastIndexOf("/") + 1,
+            -4
+        );
+
+        await cloudinary.uploader.destroy(TrackImages.trackImageId);
+        await cloudinary.uploader.destroy(TrackImages.certificateLinkId);
 
         res.status(200).json({
             message: "track was deleted successfully",

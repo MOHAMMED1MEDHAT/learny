@@ -1,6 +1,8 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Plan = require("../models/plansModel");
+const PaymentRequest = require("../models/paymentRequestsModel");
 const APIfeatures = require("./../util/queryHandler");
+const paymobService = require("./../services/paymobService");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -53,6 +55,29 @@ exports.getPlanById = async (req, res) => {
         errorHandlerMw(err, res);
     }
 };
+
+exports.subscripeToPlan = async (req, res) => {
+    try {
+        //A.1: get the paymet data
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+
+        const plan = await Plan.findById(req.params.id);
+        //A.2: create paymentRequest
+        await PaymentRequest.create({
+            userId,
+            planId: plan._id,
+            planName: plan.planName,
+        });
+
+        //A.3: calculate the plan cost
+        const cost = plan.costOfPlan - plan.costOfPlan * plan.priceDiscount;
+
+        //A.4: contact with paymob API
+    } catch (err) {
+        errorHandlerMw(err, res);
+    }
+};
+
 exports.addPlan = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);

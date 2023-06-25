@@ -1,8 +1,12 @@
+const fs = require("fs");
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const UserCertificate = require("./../models/userCertificatesModel");
 const User = require("./../models/userModel");
 
-const { createCertificate } = require("./../services/UserCertificateService");
+const {
+    createCertificate,
+    downloadImageAsPdf,
+} = require("./../services/UserCertificateService");
 
 const jwt = require("jsonwebtoken");
 const config = require("config");
@@ -36,7 +40,7 @@ exports.getAllUserCertificateById = async (req, res) => {
         const userCertificate = await UserCertificate.findById(
             req.params.id
         ).exec();
-        if (userCertificate.length == 0) {
+        if (!userCertificate) {
             return res
                 .status(204)
                 .json({ message: "No userCertificate were added yet" });
@@ -59,11 +63,14 @@ exports.addUserCertificate = async (req, res) => {
 
         const { name } = await User.findById(userId);
 
-        certificateLink = await createCertificate({ certificateLink, name });
+        const userCertificateLink = await createCertificate({
+            certificateLink,
+            name,
+        });
 
         const userCertificate = await UserCertificate.create({
             userId,
-            certificateLink,
+            certificateLink: userCertificateLink,
             grade,
         });
 
@@ -71,6 +78,49 @@ exports.addUserCertificate = async (req, res) => {
             message: "UserCertificate was added successfully",
             data: { userCertificate },
         });
+    } catch (err) {
+        errorHandlerMw(err, res);
+    }
+};
+
+exports.downloadCertificate = async (req, res) => {
+    try {
+        const { certificateLink } = await UserCertificate.findById(
+            req.params.id
+        );
+
+        const certificatePath = await downloadImageAsPdf({ certificateLink });
+
+        setTimeout(() => {
+            res.status(200).download(certificatePath, (err) => {
+                if (err) {
+                    throw new Error(err.message);
+                } else {
+                    //delete from images
+                    fs.unlink(
+                        certificatePath
+                            .replace("pdfs", "images")
+                            .replace(".pdf", ".jpg"),
+                        (err) => {
+                            if (err) {
+                                console.error("Error deleting file :", err);
+                                return;
+                            }
+                        }
+                    );
+                    //delete from pdfs
+                    fs.unlink(
+                        certificatePath.replace(".jpg", ".pdf"),
+                        (err) => {
+                            if (err) {
+                                console.error("Error deleting file:", err);
+                                return;
+                            }
+                        }
+                    );
+                }
+            });
+        }, 100);
     } catch (err) {
         errorHandlerMw(err, res);
     }
