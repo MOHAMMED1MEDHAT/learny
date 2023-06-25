@@ -8,6 +8,8 @@ const { cloudinary } = require("./../util/uploadHandler");
 //TODO:Remove that fucking callback hell (done)
 exports.createCertificate = async ({ certificateLink, name }) => {
     try {
+        console.log("working");
+
         let userCertificateLink = "";
         //1- download the certificate
         const { filename } = await download.image({
@@ -16,7 +18,6 @@ exports.createCertificate = async ({ certificateLink, name }) => {
                 certificateLink.length - 3
             )}`,
         });
-        console.log("working");
         //2- write user name on certificate
         //LOAD MODULES
         //SETTINGS - CHANGE FONT TO YOUR OWN!
