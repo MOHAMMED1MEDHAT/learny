@@ -1,4 +1,5 @@
 const axios = require("axios");
+const path = require("path");
 const fs = require("fs");
 // const download = require("image-downloader");
 const PdfDocument = require("pdfkit");
@@ -23,13 +24,14 @@ exports.createCertificate = async ({ certificateLink, name }) => {
         //         certificateLink.length - 3
         //     )}`
         // );
+
         const filename = await downloadImage(
             certificateLink,
-            `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
-                certificateLink.length - 3
+            `${__dirname}/assets/images/${Date.now()}${path.extname(
+                certificateLink
             )}`
         );
-
+        console.log(filename);
         //2- write user name on certificate
         //LOAD MODULES
         //SETTINGS - CHANGE FONT TO YOUR OWN!
@@ -118,8 +120,8 @@ exports.downloadImageAsPdf = async ({ certificateLink }) => {
     // );
     const filename = await downloadImage(
         certificateLink,
-        `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
-            certificateLink.length - 3
+        `${__dirname}/../assets/images/${Date.now()}${path.extname(
+            certificateLink
         )}`
     );
 
@@ -167,11 +169,14 @@ exports.downloadImageAsPdf = async ({ certificateLink }) => {
 // }
 
 async function downloadImage(url, filename) {
+    let filePath = path.resolve(filename);
+    console.log(filePath.replace("\\services\\assets", "\\assets"));
+    filePath = filePath.replace("\\services\\assets", "\\assets");
     const response = await axios.get(url, { responseType: "arraybuffer" });
 
-    fs.writeFileSync(filename, response.data, (err) => {
+    fs.writeFileSync(filePath, response.data, (err) => {
         if (err) throw err;
         console.log("Image downloaded successfully!");
     });
-    return filename;
+    return filePath;
 }
