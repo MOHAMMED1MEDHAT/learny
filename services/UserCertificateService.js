@@ -12,18 +12,6 @@ exports.createCertificate = async ({ certificateLink, name }) => {
     try {
         let userCertificateLink = "";
         //1- download the certificate
-        // const { filename } = await download.image({
-        //     url: certificateLink,
-        //     dest: `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
-        //         certificateLink.length - 3
-        //     )}`,
-        // });
-        // const filename = await download(
-        //     certificateLink,
-        //     `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
-        //         certificateLink.length - 3
-        //     )}`
-        // );
 
         const filename = await downloadImage(
             certificateLink,
@@ -106,18 +94,6 @@ exports.createCertificate = async ({ certificateLink, name }) => {
 
 exports.downloadImageAsPdf = async ({ certificateLink }) => {
     //1- download the certificate
-    // const { filename } = await download.image({
-    //     url: certificateLink,
-    //     dest: `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
-    //         certificateLink.length - 3
-    //     )}`,
-    // });
-    // const filename = await download(
-    //     certificateLink,
-    //     `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
-    //         certificateLink.length - 3
-    //     )}`
-    // );
     const filename = await downloadImage(
         certificateLink,
         `${path.dirname(__dirname)}/assets/images/${Date.now()}${path.extname(
@@ -142,36 +118,8 @@ exports.downloadImageAsPdf = async ({ certificateLink }) => {
     return filename.replace("images", "pdfs").replace(".jpg", ".pdf");
 };
 
-// async function download(url, dest) {
-//     /* Create an empty file where we can save data */
-
-//     const file = fs.createWriteStream(dest);
-
-//     /* Using Promises so that we can use the ASYNC AWAIT syntax */
-//     await new Promise((resolve, reject) => {
-//         request({
-//             /* Here you should specify the exact link to the file you are trying to download */
-//             uri: url,
-//             // gzip: true,
-//         })
-//             .pipe(file)
-//             .on("finish", async () => {
-//                 console.log(`The file is finished downloading.`);
-//                 resolve();
-//             })
-//             .on("error", (error) => {
-//                 reject(error);
-//             });
-//     }).catch((error) => {
-//         console.log(`Something happened: ${error}`);
-//     });
-//     return dest;
-// }
-
 async function downloadImage(url, filename) {
     const filePath = path.resolve(filename);
-    // console.log(filePath.replace("\\services\\assets", "\assets"));
-    // filePath = filePath.replace("\\services\\assets", "\\assets");
     const response = await axios.get(url, { responseType: "arraybuffer" });
 
     fs.writeFileSync(filePath, response.data, (err) => {
