@@ -1,21 +1,27 @@
 const fs = require("fs");
-const download = require("image-downloader");
+// const download = require("image-downloader");
 const PdfDocument = require("pdfkit");
 const { createCanvas, loadImage } = require("canvas");
 const { cloudinary } = require("./../util/uploadHandler");
-const { resolve } = require("path");
+const request = require("request");
 
 //TODO:Remove that fucking callback hell (done)
 exports.createCertificate = async ({ certificateLink, name }) => {
     try {
         let userCertificateLink = "";
         //1- download the certificate
-        const { filename } = await download.image({
-            url: certificateLink,
-            dest: `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
+        // const { filename } = await download.image({
+        //     url: certificateLink,
+        //     dest: `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
+        //         certificateLink.length - 3
+        //     )}`,
+        // });
+        const filename = await download(
+            certificateLink,
+            `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
                 certificateLink.length - 3
-            )}`,
-        });
+            )}`
+        );
 
         //2- write user name on certificate
         await new Promise((resolve) => {
@@ -99,12 +105,18 @@ exports.createCertificate = async ({ certificateLink, name }) => {
 
 exports.downloadImageAsPdf = async ({ certificateLink }) => {
     //1- download the certificate
-    const { filename } = await download.image({
-        url: certificateLink,
-        dest: `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
+    // const { filename } = await download.image({
+    //     url: certificateLink,
+    //     dest: `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
+    //         certificateLink.length - 3
+    //     )}`,
+    // });
+    const filename = await download(
+        certificateLink,
+        `${__dirname}/../assets/images/${Date.now()}.${certificateLink.slice(
             certificateLink.length - 3
-        )}`,
-    });
+        )}`
+    );
 
     //2- convert Image to pdf
     const doc = new PdfDocument({ size: [1024, 768] });
@@ -122,3 +134,28 @@ exports.downloadImageAsPdf = async ({ certificateLink }) => {
 
     return filename.replace("images", "pdfs").replace(".jpg", ".pdf");
 };
+
+async function download(url, dest) {
+    /* Create an empty file where we can save data */
+    const file = fs.createWriteStream(dest);
+
+    /* Using Promises so that we can use the ASYNC AWAIT syntax */
+    await new Promise((resolve, reject) => {
+        request({
+            /* Here you should specify the exact link to the file you are trying to download */
+            uri: url,
+            gzip: true,
+        })
+            .pipe(file)
+            .on("finish", async () => {
+                console.log(`The file is finished downloading.`);
+                resolve();
+            })
+            .on("error", (error) => {
+                reject(error);
+            });
+    }).catch((error) => {
+        console.log(`Something happened: ${error}`);
+    });
+    return dest;
+}
