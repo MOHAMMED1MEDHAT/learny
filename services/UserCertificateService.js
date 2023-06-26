@@ -3,6 +3,7 @@ const download = require("image-downloader");
 const PdfDocument = require("pdfkit");
 const { createCanvas, loadImage } = require("canvas");
 const { cloudinary } = require("./../util/uploadHandler");
+const { resolve } = require("path");
 
 //TODO:Remove that fucking callback hell (done)
 exports.createCertificate = async ({ certificateLink, name }) => {
@@ -17,54 +18,60 @@ exports.createCertificate = async ({ certificateLink, name }) => {
         });
 
         //2- write user name on certificate
-        //LOAD MODULES
-        //SETTINGS - CHANGE FONT TO YOUR OWN!
-        const sFile = `${filename}`, // source image
-            sSave = `${filename.replace("images", "pdfs")}`, // "save as"
-            sText = name, // text to write
-            sX = 380,
-            sY = 80; // text position
+        await new Promise((resolve) => {
+            setTimeout(async () => {
+                //LOAD MODULES
+                //SETTINGS - CHANGE FONT TO YOUR OWN!
+                const sFile = filename; // source image
+                const sSave = filename.replace("images", "pdfs"); // "save as"
+                const sText = name; // text to write
+                const sX = 380;
+                const sY = 80; // text position
 
-        //LOAD IMAGE + DRAW TEXT
-        const img = await loadImage(sFile);
-        //CREATE CANVAS + DRAW IMAGE
-        const canvas = createCanvas(img.width, img.height),
-            ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
+                // //LOAD IMAGE + DRAW TEXT
+                const img = await loadImage(sFile);
+                //CREATE CANVAS + DRAW IMAGE
+                const canvas = createCanvas(img.width, img.height);
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
 
-        //TEXT DIMENSIONS
-        ctx.font = "30px Arial";
-        ctx.fillStyle = "rgb(0, 0, 0)";
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "rgb(0, 0, 0)";
-        let td = ctx.measureText(sText),
-            tw = td.width,
-            th = td.actualBoundingBoxAscent + td.actualBoundingBoxDescent;
+                //TEXT DIMENSIONS
+                ctx.font = "30px Arial";
+                ctx.fillStyle = "rgb(0, 0, 0)";
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgb(0, 0, 0)";
+                let td = ctx.measureText(sText),
+                    tw = td.width,
+                    th =
+                        td.actualBoundingBoxAscent +
+                        td.actualBoundingBoxDescent;
 
-        //CALCULATE CENTER & WRITE ON CENTER
-        let x = Math.floor((img.naturalWidth - tw) / 2),
-            y = Math.floor((img.naturalHeight - th) / 2);
-        ctx.strokeText(sText, x, y);
-        ctx.fillText(sText, x, y);
+                //CALCULATE CENTER & WRITE ON CENTER
+                let x = Math.floor((img.naturalWidth - tw) / 2),
+                    y = Math.floor((img.naturalHeight - th) / 2);
+                ctx.strokeText(sText, x, y);
+                ctx.fillText(sText, x, y);
 
-        // SAVE
-        const out = fs.createWriteStream(sSave),
-            stream = canvas.createJPEGStream();
-        stream.pipe(out);
-        out.on("finish", () => console.log("Done"));
+                // SAVE
+                const out = fs.createWriteStream(sSave);
+                const stream = canvas.createJPEGStream();
+                stream.pipe(out);
+                out.on("finish", () => console.log("Done"));
 
-        //3-save certificate to cloud
-        await cloudinary.uploader.upload(
-            `${filename.replace("images", "pdfs")}`,
-            (error, result) => {
-                if (error) {
-                    throw new Error(error.message);
-                }
-                userCertificateLink = result.url;
-                console.log(result.url);
-            }
-        );
-
+                //3-save certificate to cloud
+                await cloudinary.uploader.upload(
+                    `${filename.replace("images", "pdfs")}`,
+                    (error, result) => {
+                        if (error) {
+                            throw new Error(error.message);
+                        }
+                        userCertificateLink = result.url;
+                        console.log(result.url);
+                    }
+                );
+                resolve();
+            }, 1000);
+        });
         const filePath = filename;
         //4-delete all certificate assets from local storage (images,pdfs)
         // //delete from images
