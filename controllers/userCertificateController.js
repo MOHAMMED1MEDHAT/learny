@@ -63,7 +63,7 @@ exports.addUserCertificate = async (req, res) => {
 
         const { name } = await User.findById(userId);
 
-        const { userCertificateLink, filePath } = await createCertificate({
+        const { userCertificateLink } = await createCertificate({
             certificateLink,
             name,
         });
@@ -74,26 +74,9 @@ exports.addUserCertificate = async (req, res) => {
             grade,
         });
 
-        //4-delete all certificate assets from local storage (images,pdfs)
-        //delete from images
-        fs.unlink(filePath, (err) => {
-            if (err) {
-                console.error("Error deleting file:", err);
-                return;
-            }
-        });
-
-        //delete from pdfs
-        fs.unlink(filePath.replace("images", "pdfs"), (err) => {
-            if (err) {
-                console.error("Error deleting file:", err);
-                return;
-            }
-        });
-
         res.status(200).json({
             message: "UserCertificate was added successfully",
-            data: { userCertificate },
+            data: { userCertificate } || "None",
         });
     } catch (err) {
         errorHandlerMw(err, res);
