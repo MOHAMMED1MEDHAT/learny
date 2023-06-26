@@ -133,6 +133,9 @@ exports.postPaymentOps = async (req, res) => {
         <div class="message">
           <p>${message}</p>
         </div>
+        <div class="message">
+          <p>${process.env.CLIENT_URL}</p>
+        </div>
         </body>
         </html>`);
     } catch (err) {
