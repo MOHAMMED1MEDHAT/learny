@@ -1,3 +1,5 @@
+const Track = require("./trackModel");
+const { deleteTestFromTracks } = require("./../services/testService");
 const mongoose = require("mongoose");
 
 const testSchema = new mongoose.Schema(
@@ -41,6 +43,11 @@ const testSchema = new mongoose.Schema(
 
 testSchema.virtual("id").get(function () {
     return this._id.toHexString();
+});
+
+testSchema.pre("findOneAndDelete", async function (next) {
+    await deleteTestFromTracks(Track, this._conditions._id);
+    next();
 });
 
 module.exports = mongoose.model("test", testSchema);
