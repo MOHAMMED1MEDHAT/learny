@@ -134,7 +134,7 @@ exports.postPaymentOps = async (req, res) => {
           <p>${message}</p>
         </div>
         <div class="message">
-          <p><a href=${process.env.CLIENT_URL}style='color:#fff'>Back To Home</a></p>
+          <p><a href=${process.env.CLIENT_URL}style='color:#ffffff'>Back To Home</a></p>
         </div>
         </body>
         </html>`);
