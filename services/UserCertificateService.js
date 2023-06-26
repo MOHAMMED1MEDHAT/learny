@@ -170,8 +170,8 @@ exports.downloadImageAsPdf = async ({ certificateLink }) => {
 
 async function downloadImage(url, filename) {
     let filePath = path.resolve(filename);
-    console.log(filePath.replace("\\services\\assets", "\\assets"));
-    filePath = filePath.replace("\\services\\assets", "\\assets");
+    // console.log(filePath.replace("\\services\\assets", "\assets"));
+    // filePath = filePath.replace("\\services\\assets", "\\assets");
     const response = await axios.get(url, { responseType: "arraybuffer" });
 
     fs.writeFileSync(filePath, response.data, (err) => {
