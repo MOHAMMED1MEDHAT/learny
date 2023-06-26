@@ -112,11 +112,29 @@ exports.postPaymentOps = async (req, res) => {
 
         await PaymentRequest.findByIdAndDelete(paymentRequest._id);
 
-        res.status(200).json({
-            message,
-            success,
-            paymentRequest,
-        });
+        res.status(200).send(`<html>
+        <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        .message {
+          background-color: #595EF0;
+          border: 1px solid #595EF0;
+          padding: 10px;
+          border-radius: 4px;
+        }
+        .message p {
+          margin: 0;
+          text-align:center;
+          color:#EFF1FE;
+        }
+        </style>
+        </head>
+        <body>
+        <div class="message">
+          <p>${message}</p>
+        </div>
+        </body>
+        </html>`);
     } catch (err) {
         // console.log(err);
         errorHandlerMw(err, res);
