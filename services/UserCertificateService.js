@@ -27,9 +27,9 @@ exports.createCertificate = async ({ certificateLink, name }) => {
 
         const filename = await downloadImage(
             certificateLink,
-            `${__dirname}/assets/images/${Date.now()}${path.extname(
-                certificateLink
-            )}`
+            `${path.dirname(
+                __dirname
+            )}/assets/images/${Date.now()}${path.extname(certificateLink)}`
         );
         console.log(filename);
         //2- write user name on certificate
@@ -120,7 +120,7 @@ exports.downloadImageAsPdf = async ({ certificateLink }) => {
     // );
     const filename = await downloadImage(
         certificateLink,
-        `${__dirname}/../assets/images/${Date.now()}${path.extname(
+        `${path.dirname(__dirname)}/assets/images/${Date.now()}${path.extname(
             certificateLink
         )}`
     );
@@ -169,7 +169,7 @@ exports.downloadImageAsPdf = async ({ certificateLink }) => {
 // }
 
 async function downloadImage(url, filename) {
-    let filePath = path.resolve(filename);
+    const filePath = path.resolve(filename);
     // console.log(filePath.replace("\\services\\assets", "\assets"));
     // filePath = filePath.replace("\\services\\assets", "\\assets");
     const response = await axios.get(url, { responseType: "arraybuffer" });
