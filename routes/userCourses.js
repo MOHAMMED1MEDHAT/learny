@@ -14,10 +14,10 @@ router.patch(
     UserCourse.updateWatchedTimeByCourseId
 );
 
-//update course status by course id
-router.patch(
-    "/update/course/status/:id",
-    UserCourse.updateCourseStatusByCourseId
-);
+// //update course status by course id
+// router.patch(
+//     "/update/course/status/:id",
+//     UserCourse.updateCourseStatusByCourseId
+// );
 
 module.exports = router;
