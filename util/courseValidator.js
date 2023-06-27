@@ -25,6 +25,9 @@ const schema = {
                 required: ["link", "title"],
             },
         },
+        totalWatchTime: {
+            type: "string",
+        },
         imageUrl: {
             type: "string",
         },

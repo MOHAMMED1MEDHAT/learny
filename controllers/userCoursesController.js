@@ -33,6 +33,37 @@ exports.getUserCoursesByUserId = async (req, res) => {
     }
 };
 
+exports.getUserCoursesByCourseId = async (req, res) => {
+    try {
+        const courseId = req.params.id;
+
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+
+        if (!mongoose.isValidObjectId(userId)) {
+            return res.status(400).json({ message: "Invalid id" });
+        }
+
+        const userCourse = await UserCourse.findOne({
+            userId,
+        }).exec();
+
+        if (!userCourse) {
+            return res.status(204).json({ message: "user Course not found" });
+        }
+
+        const course = userCourse.courses.filter(
+            (cour) => cour.courseId == courseId
+        );
+
+        res.status(200).json({
+            message: "userCourse found",
+            data: { userCourse, course },
+        });
+    } catch (err) {
+        errorHandlerMw(err, res);
+    }
+};
+
 //update time course watched by course id
 exports.updateWatchedTimeByCourseId = async (req, res) => {
     try {

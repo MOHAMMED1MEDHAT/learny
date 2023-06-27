@@ -40,6 +40,10 @@ const courseSchema = new mongoose.Schema(
             required: [true, "A course must have a courseName"],
         },
         links: [linksSchema],
+        totalWatchTime: {
+            type: Number,
+            required: [true, "A course must have a totalWatchTime"],
+        },
         imageUrl: {
             type: String,
             trim: true,

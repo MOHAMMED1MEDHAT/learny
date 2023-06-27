@@ -1,6 +1,11 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Track = require("../models/trackModel");
+const Course = require("../models/coursesModel");
+const UserCourse = require("./../models/userCoursesModel");
 const { addNotification } = require("./../services/notificationService");
+const courseService = require("../services/courseService");
+const userCourseService = require("../services/userCourseService");
+
 const APIfeatures = require("./../util/queryHandler");
 const { cloudinary } = require("./../util/uploadHandler");
 
@@ -306,6 +311,14 @@ exports.subscripeToTrackByTrackId = async (req, res) => {
             { returnOriginal: false }
         ).exec();
 
+        const coursesServices = new courseService(Course);
+
+        track.courses.map(async (course) => {
+            const courseId = course.courseId;
+            await coursesServices.subscripe(userId, courseId);
+            await userCourseService.subscripe({ UserCourse, userId, courseId });
+        });
+
         if (!track) {
             return res.status(400).json({ message: "Bad Request" });
         }
@@ -368,6 +381,18 @@ exports.unsubscripeToTrackById = async (req, res) => {
                     await Track.findById(req.params.id)
                 ).categoryName
             }`,
+        });
+
+        const coursesServices = new courseService(Course);
+
+        track.courses.map(async (course) => {
+            const courseId = course.courseId;
+            await coursesServices.unsubscripe(userId, courseId);
+            await userCourseService.unsubscripe({
+                UserCourse,
+                courseId,
+                userId,
+            });
         });
 
         res.status(200).json({

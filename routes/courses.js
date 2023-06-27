@@ -23,7 +23,7 @@ router.put("/:id", validator, Course.updateCourseByCourseId);
 //update course links by course id
 router.patch("/update/links/:id", Course.updateCourseLinksByCourseId);
 
-//subscripe to course by course id
+// subscripe to course by course id
 // router.patch("/subscripe/:id", Course.subscripeToCourseByCourseId);
 
 // //unsubscripe to course by course id

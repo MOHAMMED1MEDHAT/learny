@@ -194,7 +194,7 @@ exports.subscripeToCourseByCourseId = async (req, res) => {
         }
 
         //add subscription to userCourses Model
-        userCourseService.subscripe({
+        await userCourseService.subscripe({
             UserCourse,
             userId,
             courseId: req.params.id,
