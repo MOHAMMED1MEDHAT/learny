@@ -11,13 +11,13 @@ const errorHandler = require("./middlewares/errorHandlerMw");
 
 const app = express();
 
-// // FIXME: ENABLE ON DEPLOYMENT
-// process.on("uncaughtException", (exception) => {
-//     console.log("uncaught Exception" + exception);
-// });
-// process.on("unhandledRejection", (exception) => {
-//     console.log("uncaught async Exception" + exception);
-// });
+// FIXME: ENABLE ON DEPLOYMENT
+process.on("uncaughtException", (exception) => {
+    console.log("uncaught Exception" + exception);
+});
+process.on("unhandledRejection", (exception) => {
+    console.log("uncaught async Exception" + exception);
+});
 
 //mongoose connection setup
 //FIXME:change to ATLAS_CONNECTION_STRING
