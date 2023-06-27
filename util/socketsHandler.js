@@ -47,6 +47,7 @@ exports.userSendNotification = async (token, msg) => {
 
         await Notification.create({ userId, message: msg });
 
+        // console.log(sockets);
         return sockets;
     } catch (error) {
         throw new Error("Error in setting the sockets");

@@ -117,6 +117,7 @@ const io = require("socket.io")(server, {
 
 io.on("connection", function (socket) {
     console.log(`user ${socket.id} Connected`);
+    const socketId = socket.id;
 
     socket.on("setUpConnection", async function ({ token, socketId }) {
         try {
@@ -137,6 +138,7 @@ io.on("connection", function (socket) {
     socket.on("userSendNotification", async function ({ token, msg }) {
         try {
             const sockets = await userSendNotification(token, msg);
+            sockets.push(socketId);
             io.to(sockets).emit("userGetNotification", msg);
         } catch (error) {
             console.log(error.message);
