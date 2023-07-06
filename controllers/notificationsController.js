@@ -11,6 +11,7 @@ exports.getAllNotificationsByUserId = async (req, res) => {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         const notifications = await Notifications.find({ userId }).exec();
+
         if (notifications.length == 0) {
             return res
                 .status(204)

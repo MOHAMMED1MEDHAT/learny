@@ -117,24 +117,24 @@ exports.postPaymentOps = async (req, res) => {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
         .message {
-          background-color: #595EF0;
-          border: 1px solid #595EF0;
-          padding: 10px;
-          border-radius: 4px;
+            background-color: #595EF0;
+            border: 1px solid #595EF0;
+            padding: 10px;
+            border-radius: 4px;
         }
         .message p {
-          margin: 0;
-          text-align:center;
-          color:#EFF1FE;
+            margin: 0;
+            text-align:center;
+            color:#EFF1FE;
         }
         </style>
         </head>
         <body>
         <div class="message">
-          <p>${message}</p>
+            <p>${message}</p>
         </div>
         <div class="message">
-          <p><a href=${process.env.CLIENT_URL} style='color:#ffffff'>Back To Home</a></p>
+            <p><a href=${process.env.CLIENT_URL} style='color:#ffffff'>Back To Home</a></p>
         </div>
         </body>
         </html>`);
