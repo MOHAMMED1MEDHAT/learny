@@ -42,11 +42,13 @@ exports.getAllCourses = async (req, res) => {
 //get course by course id
 exports.getCourseByCourseId = async (req, res) => {
     try {
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        const courseId = req.params.id;
+
+        if (!mongoose.isValidObjectId(courseId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const course = await Course.findById(req.params.id)
+        const course = await Course.findById(courseId)
             .populate({
                 path: "testId",
             })
@@ -98,11 +100,13 @@ exports.addCourse = async (req, res) => {
 exports.updateCourseByCourseId = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const courseId = req.params.id;
+
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        if (!mongoose.isValidObjectId(courseId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
@@ -110,7 +114,7 @@ exports.updateCourseByCourseId = async (req, res) => {
             req.body;
 
         const course = await Course.findByIdAndUpdate(
-            req.params.id,
+            courseId,
             {
                 courseName,
                 links,
@@ -138,18 +142,20 @@ exports.updateCourseByCourseId = async (req, res) => {
 exports.updateCourseLinksByCourseId = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const courseId = req.params.id;
+
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        if (!mongoose.isValidObjectId(courseId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
         const { links } = req.body;
 
         const course = await Course.findByIdAndUpdate(
-            req.params.id,
+            courseId,
             {
                 links,
             },
@@ -176,7 +182,7 @@ exports.subscripeToCourseByCourseId = async (req, res) => {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         const courseId = req.params.id;
 
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        if (!mongoose.isValidObjectId(courseId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
@@ -214,27 +220,27 @@ exports.subscripeToCourseByCourseId = async (req, res) => {
 exports.unsubscripeToCourseByCourseId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const courseId = req.params.id;
 
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        if (!mongoose.isValidObjectId(courseId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
         //remove subscription to course Model
         const course = await courseService.unsubscripe({
             userId,
-            courseId: req.params.id,
+            courseId,
         });
         if (!course) {
             return res.status(400).json({ message: "Bad Request" });
         }
-        //-----------------------------------------------
 
         //remove subscription from userCourse model
-        const userCourse = userCourseService.unsubscripe({
+        const userCourse = await userCourseService.unsubscripe({
             userId,
-            courseId: req.params.id,
+            courseId,
         });
-        //-----------------------------------------------
+
         res.status(200).json({
             message: "unsubscriped successfully",
             data: { course, userCourse },
@@ -249,15 +255,17 @@ exports.unsubscripeToCourseByCourseId = async (req, res) => {
 exports.deleteCourseByCourseId = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const courseId = req.params.id;
+
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        if (!mongoose.isValidObjectId(courseId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const course = await Course.findByIdAndDelete(req.params.id).exec();
+        const course = await Course.findByIdAndDelete(courseId).exec();
 
         if (!course) {
             return res.status(400).json({ message: "Bad Request" });
