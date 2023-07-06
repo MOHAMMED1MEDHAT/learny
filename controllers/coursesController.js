@@ -108,7 +108,8 @@ exports.updateCourseByCourseId = async (req, res) => {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const { courseName, links, imageUrl } = req.body;
+        const { courseName, links, imageUrl, testId, totalWatchTime } =
+            req.body;
 
         const course = await Course.findByIdAndUpdate(
             req.params.id,
@@ -116,6 +117,8 @@ exports.updateCourseByCourseId = async (req, res) => {
                 courseName,
                 links,
                 imageUrl,
+                testId,
+                totalWatchTime,
             },
             { runValidators: true, new: true }
         ).exec();
