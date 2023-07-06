@@ -192,13 +192,13 @@ exports.subscripeToCourseByCourseId = async (req, res) => {
             courseId,
         });
 
+        if (!course) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
+
         //TODO: REMOVE IN PRODUCTION
         if (course === "subscriped".toUpperCase()) {
             return res.status(400).json({ message: "User subscriped before" });
-        }
-
-        if (!course) {
-            return res.status(400).json({ message: "Bad Request" });
         }
 
         //add subscription to userCourses Model
