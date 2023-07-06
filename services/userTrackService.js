@@ -1,6 +1,6 @@
 exports.subscripe = async ({ UserTrack, userId, trackId }) => {
     //NOTE: if user never subscriped
-    const userSubscripedCoursesBefore = await UserTrack.findOne({
+    const userSubscripedTracksBefore = await UserTrack.findOne({
         userId,
     }).exec();
 
@@ -9,7 +9,7 @@ exports.subscripe = async ({ UserTrack, userId, trackId }) => {
         passed: false,
     };
 
-    if (!userSubscripedCoursesBefore) {
+    if (!userSubscripedTracksBefore) {
         UserTrack.create({
             userId,
             tracks: [tracksOfUser],
@@ -68,4 +68,37 @@ exports.updateTrackPassedState = async ({
         }
     }
     await UserTrack.findOneAndUpdate({ userId }, { tracks }).exec();
+};
+
+exports.isSubscriped = async ({ UserTrack, userId, trackId }) => {
+    //NOTE: if user never subscriped
+    const userSubscripedTracksBefore = await UserTrack.findOne({
+        userId,
+    }).exec();
+
+    if (!userSubscripedTracksBefore) {
+        return false;
+    } else {
+        let isSubscriped = false;
+        userSubscripedTracksBefore.tracks.forEach((track) => {
+            if (track.trackId.toString() == trackId.toString()) {
+                isSubscriped = true;
+            }
+        });
+        return isSubscriped;
+    }
+};
+
+exports.isPassed = async ({ UserTrack, userId, trackId }) => {
+    const { tracks } = await UserTrack.findOne({ userId }).exec();
+    let isPassed = false;
+
+    tracks.forEach((track) => {
+        if (track.trackId.toString() == trackId.toString()) {
+            // console.log("track.passed", track.passed);
+            isPassed = track.passed;
+        }
+    });
+
+    return isPassed;
 };

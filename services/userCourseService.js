@@ -71,3 +71,36 @@ exports.updateCoursePassedState = async ({
 
     await UserCourse.findOneAndUpdate({ userId }, { courses }).exec();
 };
+
+exports.isSubscriped = async ({ UserCourse, userId, courseId }) => {
+    //NOTE: if user never subscriped
+    const userSubscripedCourseBefore = await UserCourse.findOne({
+        userId,
+    }).exec();
+
+    if (!userSubscripedCourseBefore) {
+        return false;
+    } else {
+        let isSubscriped = false;
+        userSubscripedCourseBefore.courses.forEach((course) => {
+            if (course.courseId.toString() == courseId.toString()) {
+                isSubscriped = true;
+            }
+        });
+        return isSubscriped;
+    }
+};
+
+exports.isPassed = async ({ UserCourse, userId, courseId }) => {
+    const { courses } = await UserCourse.findOne({ userId }).exec();
+    let isPassed = false;
+
+    courses.forEach((course) => {
+        if (course.courseId.toString() == courseId.toString()) {
+            // console.log("course.passed", course.passed);
+            isPassed = course.passed;
+        }
+    });
+
+    return isPassed;
+};

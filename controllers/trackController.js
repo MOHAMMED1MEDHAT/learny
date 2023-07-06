@@ -49,18 +49,33 @@ exports.getAllTracks = async (req, res) => {
         }
 
         if (!isAdmin) {
-            const updatedTracks = tracks.map((track) => {
-                let status = false;
-                if (track.subscripers.length > 0) {
-                    status = track.subscripers.some(
-                        (subscriper) => subscriper.subscriperId == userId
-                    );
-                }
-                return {
-                    ...track.toObject(),
-                    status: status ? "subscriped" : "start now",
-                };
-            });
+            const updatedTracks = await Promise.all(
+                tracks.map(async (track) => {
+                    let isSubscriped = false;
+                    let isPassed = false;
+                    isSubscriped = await userTrackService.isSubscriped({
+                        UserTrack,
+                        trackId: track._id,
+                        userId,
+                    });
+                    if (isSubscriped) {
+                        isPassed = await userTrackService.isPassed({
+                            UserTrack,
+                            trackId: track._id,
+                            userId,
+                        });
+                    }
+
+                    return {
+                        ...track.toObject(),
+                        status: isSubscriped
+                            ? isPassed
+                                ? "passed"
+                                : "subsciped"
+                            : "start now",
+                    };
+                })
+            );
             res.status(200).json({
                 message: "tracks found",
                 results: updatedTracks.length,
@@ -428,6 +443,12 @@ exports.unsubscripeToTrackById = async (req, res) => {
                 courseId,
                 userId,
             });
+        });
+
+        await userTrackService.unsubscripe({
+            UserTrack,
+            userId,
+            trackId,
         });
 
         res.status(200).json({
