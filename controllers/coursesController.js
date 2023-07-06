@@ -1,6 +1,5 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Course = require("../models/coursesModel");
-const UserCourse = require("../models/userCoursesModel");
 const userCourseService = require("../services/userCourseService");
 const courseService = require("../services/courseService");
 const APIfeatures = require("./../util/queryHandler");
@@ -195,7 +194,6 @@ exports.subscripeToCourseByCourseId = async (req, res) => {
 
         //add subscription to userCourses Model
         await userCourseService.subscripe({
-            UserCourse,
             userId,
             courseId: req.params.id,
         });
@@ -231,7 +229,6 @@ exports.unsubscripeToCourseByCourseId = async (req, res) => {
 
         //remove subscription from userCourse model
         const userCourse = userCourseService.unsubscripe({
-            UserCourse,
             userId,
             courseId: req.params.id,
         });

@@ -1,4 +1,6 @@
-exports.subscripe = async ({ UserCourse, userId, courseId }) => {
+const UserCourse = require("../models/userCoursesModel");
+
+exports.subscripe = async ({ userId, courseId }) => {
     //NOTE: if user never subscriped
     const userSubscripedCoursesBefore = await UserCourse.findOne({
         userId,
@@ -30,7 +32,7 @@ exports.subscripe = async ({ UserCourse, userId, courseId }) => {
     }
 };
 
-exports.unsubscripe = async ({ UserCourse, userId, courseId }) => {
+exports.unsubscripe = async ({ userId, courseId }) => {
     const { courses } = await UserCourse.findOne({ userId }).exec();
     let userCourseDocument = {};
     for (const elm of courses) {
@@ -52,12 +54,7 @@ exports.unsubscripe = async ({ UserCourse, userId, courseId }) => {
     return userCourse;
 };
 
-exports.updateCoursePassedState = async ({
-    UserCourse,
-    userId,
-    courseId,
-    isPassed,
-}) => {
+exports.updateCoursePassedState = async ({ userId, courseId, isPassed }) => {
     const userCourse = await UserCourse.findOne({ userId }).exec();
 
     const { courses } = userCourse;
@@ -72,7 +69,7 @@ exports.updateCoursePassedState = async ({
     await UserCourse.findOneAndUpdate({ userId }, { courses }).exec();
 };
 
-exports.isSubscriped = async ({ UserCourse, userId, courseId }) => {
+exports.isSubscriped = async ({ userId, courseId }) => {
     //NOTE: if user never subscriped
     const userSubscripedCourseBefore = await UserCourse.findOne({
         userId,
@@ -91,7 +88,7 @@ exports.isSubscriped = async ({ UserCourse, userId, courseId }) => {
     }
 };
 
-exports.isPassed = async ({ UserCourse, userId, courseId }) => {
+exports.isPassed = async ({ userId, courseId }) => {
     const { courses } = await UserCourse.findOne({ userId }).exec();
     let isPassed = false;
 
