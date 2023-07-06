@@ -171,6 +171,14 @@ class CourseService {
             }
         });
     }
+
+    async isNameExist(courseName) {
+        const courseAddedBefore = await this.Course.findOne({
+            courseName,
+        }).exec();
+
+        return courseAddedBefore ? true : false;
+    }
 }
 
 module.exports = CourseService;

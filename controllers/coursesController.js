@@ -65,17 +65,17 @@ exports.getCourseByCourseId = async (req, res) => {
 //add course
 exports.addCourse = async (req, res) => {
     try {
+        const CourseService = new courseService(Course);
+
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        const { courseName, links, imageUrl, testId } = req.body;
-        const courseAddedBefore = await Course.findOne({
-            courseName,
-        }).exec();
+        const { courseName, links, imageUrl, testId, totalWatchTime } =
+            req.body;
 
-        if (courseAddedBefore) {
+        if (await CourseService.isNameExist(courseName)) {
             return res.status(409).json({ message: "this name is used" });
         }
 
@@ -84,6 +84,7 @@ exports.addCourse = async (req, res) => {
             links,
             imageUrl,
             testId,
+            totalWatchTime,
         });
 
         res.status(200).json({
