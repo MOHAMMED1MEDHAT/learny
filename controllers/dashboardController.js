@@ -83,14 +83,18 @@ exports.getAllTracksSubscripersNum = async (req, res) => {
             {
                 $group: {
                     _id: null,
-                    numTracks: { $sum: 1 },
+                    numOfSubscripersOfAllTracks: { $sum: 1 },
                 },
             },
         ]);
 
+        const ResponseObj = {
+            totalSubscripers: stats[0].numOfSubscripersOfAllTracks,
+        };
+
         res.status(200).json({
             message: "success",
-            data: { stats },
+            ResponseObj,
         });
     } catch (err) {
         errorHandlerMw(err, res);
