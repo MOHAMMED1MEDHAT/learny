@@ -354,11 +354,9 @@ exports.subscripeToTrackByTrackId = async (req, res) => {
             { returnOriginal: false }
         ).exec();
 
-        const coursesServices = new courseService(Course);
-
         track.courses.map(async (course) => {
             const courseId = course.courseId;
-            await coursesServices.subscripe(userId, courseId);
+            await courseService.subscripe(userId, courseId);
             await userCourseService.subscripe({ UserCourse, userId, courseId });
         });
 
@@ -433,11 +431,9 @@ exports.unsubscripeToTrackById = async (req, res) => {
             }`,
         });
 
-        const coursesServices = new courseService(Course);
-
         track.courses.map(async (course) => {
             const courseId = course.courseId;
-            await coursesServices.unsubscripe(userId, courseId);
+            await courseService.unsubscripe(userId, courseId);
             await userCourseService.unsubscripe({
                 UserCourse,
                 courseId,

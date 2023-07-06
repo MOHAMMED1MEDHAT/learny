@@ -21,12 +21,12 @@ exports.getNumOfUser = async (req, res) => {
             {
                 $group: {
                     _id: null,
-                    numOfSubscripers: { $sum: 1 },
+                    numOfUsers: { $sum: 1 },
                 },
             },
         ]);
 
-        const ResponseObj = { numOfSubscripers: stats[0].numOfSubscripers };
+        const ResponseObj = { numOfUsers: stats[0].numOfUsers };
 
         res.status(200).json({
             message: "success",
@@ -164,9 +164,16 @@ exports.getEachMonthUsersSubs = async (req, res) => {
             },
         ]);
 
+        const ResponseObj = stats.map((stat) => {
+            return {
+                month: stat.month,
+                numOfSubscripers: stat.numOfSubscripers,
+            };
+        });
+
         res.status(200).json({
             message: "success",
-            data: { stats },
+            ResponseObj,
         });
     } catch (err) {
         errorHandlerMw(err, res);
