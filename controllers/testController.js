@@ -104,6 +104,9 @@ exports.addUserAnswersToTestById = async (req, res) => {
             answers,
         });
 
+        if (message === "passed") {
+        }
+
         res.status(200).json({
             data: { grade, message, correctAndNotObj },
         });

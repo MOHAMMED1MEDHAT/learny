@@ -2,9 +2,11 @@ const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Track = require("../models/trackModel");
 const Course = require("../models/coursesModel");
 const UserCourse = require("./../models/userCoursesModel");
+const UserTrack = require("./../models/userTrackModel");
 const { addNotification } = require("./../services/notificationService");
 const courseService = require("../services/courseService");
 const userCourseService = require("../services/userCourseService");
+const userTrackService = require("../services/userTrackService");
 
 const APIfeatures = require("./../util/queryHandler");
 const { cloudinary } = require("./../util/uploadHandler");
@@ -17,6 +19,11 @@ const jwtSCRT = config.get("env_var.jwtScreteKey");
 //get all tracks
 exports.getAllTracks = async (req, res) => {
     try {
+        const { userId, isAdmin } = jwt.verify(
+            req.header("x-auth-token"),
+            jwtSCRT
+        );
+
         let Query = Track.find();
 
         const APIfeaturesObj = new APIfeatures(Query, req.query)
@@ -34,18 +41,38 @@ exports.getAllTracks = async (req, res) => {
         }).populate({
             path: "testId",
         });
-        // const tracks = await Track.find();
+
         if (tracks.length == 0) {
             return res
                 .status(204)
                 .json({ message: "No tracks were added yet" });
         }
 
-        res.status(200).json({
-            message: "tracks found",
-            results: tracks.length,
-            data: { tracks },
-        });
+        if (!isAdmin) {
+            const updatedTracks = tracks.map((track) => {
+                let status = false;
+                if (track.subscripers.length > 0) {
+                    status = track.subscripers.some(
+                        (subscriper) => subscriper.subscriperId == userId
+                    );
+                }
+                return {
+                    ...track.toObject(),
+                    status: status ? "subscriped" : "start now",
+                };
+            });
+            res.status(200).json({
+                message: "tracks found",
+                results: updatedTracks.length,
+                data: { tracks: updatedTracks },
+            });
+        } else {
+            res.status(200).json({
+                message: "tracks found",
+                results: tracks.length,
+                data: { tracks },
+            });
+        }
     } catch (err) {
         errorHandlerMw(err, res);
     }
@@ -285,12 +312,13 @@ exports.deleteCoursesFromTrack = async (req, res) => {
 exports.subscripeToTrackByTrackId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const trackId = req.params.id;
 
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        if (!mongoose.isValidObjectId(trackId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const { subscripers } = await Track.findById(req.params.id).exec();
+        const { subscripers } = await Track.findById(trackId).exec();
         for (const subscriper of subscripers) {
             if (subscriper.subscriperId == userId) {
                 return res
@@ -304,7 +332,7 @@ exports.subscripeToTrackByTrackId = async (req, res) => {
         subscripers.push(subscriper);
 
         const track = await Track.findByIdAndUpdate(
-            req.params.id,
+            trackId,
             {
                 subscripers,
             },
@@ -319,6 +347,12 @@ exports.subscripeToTrackByTrackId = async (req, res) => {
             await userCourseService.subscripe({ UserCourse, userId, courseId });
         });
 
+        await userTrackService.subscripe({
+            UserTrack,
+            userId,
+            trackId,
+        });
+
         if (!track) {
             return res.status(400).json({ message: "Bad Request" });
         }
@@ -327,7 +361,7 @@ exports.subscripeToTrackByTrackId = async (req, res) => {
             userId,
             message: `subsciped successfully to ${
                 (
-                    await Track.findById(req.params.id)
+                    await Track.findById(trackId)
                 ).categoryName
             }`,
         });
@@ -345,12 +379,13 @@ exports.subscripeToTrackByTrackId = async (req, res) => {
 exports.unsubscripeToTrackById = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const trackId = req.params.id;
 
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        if (!mongoose.isValidObjectId(trackId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const { subscripers } = await Track.findById(req.params.id).exec();
+        const { subscripers } = await Track.findById(trackId).exec();
         let subcriper = {};
         for (const elm of subscripers) {
             if (elm.subscriperId == userId) {
@@ -363,7 +398,7 @@ exports.unsubscripeToTrackById = async (req, res) => {
         const newSubscripers = subscripers;
 
         const track = await Track.findByIdAndUpdate(
-            req.params.id,
+            trackId,
             {
                 subscripers: newSubscripers,
             },
@@ -378,7 +413,7 @@ exports.unsubscripeToTrackById = async (req, res) => {
             userId,
             message: `unsubsciped successfully from ${
                 (
-                    await Track.findById(req.params.id)
+                    await Track.findById(trackId)
                 ).categoryName
             }`,
         });

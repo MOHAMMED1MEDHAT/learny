@@ -140,7 +140,6 @@ io.on("connection", function (socket) {
             const sockets = await userSendNotification(token, msg);
             sockets.push(socketId);
             io.to(sockets).emit("userGetNotification", msg);
-            console.log(sockets);
         } catch (error) {
             console.log(error.message);
         }

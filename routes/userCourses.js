@@ -1,3 +1,4 @@
+//TODO: delete this file
 const validator = require("../middlewares/usercoursesValidatorMw");
 const UserCourse = require("../controllers/userCoursesController");
 

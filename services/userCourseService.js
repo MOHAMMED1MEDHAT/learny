@@ -11,11 +11,10 @@ exports.subscripe = async ({ UserCourse, userId, courseId }) => {
     };
 
     if (!userSubscripedCoursesBefore) {
-        let userCourse = new UserCourse({
+        UserCourse.create({
             userId,
             courses: [coursesOfUser],
         });
-        await userCourse.save();
     } else {
         const { courses } = await UserCourse.findOne({ userId }).exec();
 

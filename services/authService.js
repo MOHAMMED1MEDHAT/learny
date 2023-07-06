@@ -16,11 +16,11 @@ const requestPasswordReset = async (email) => {
         let resetToken = crypto.randomBytes(32).toString("hex");
         const hash = await bcrypt.hash(resetToken, Number(bcryptSalt));
 
-        await new Token({
+        Token.create({
             userId: user._id,
             token: hash,
             createdAt: Date.now(),
-        }).save();
+        });
 
         const link = `${clientURL}/passwordReset?token=${resetToken}&id=${user._id}`;
         // console.log(user.email);

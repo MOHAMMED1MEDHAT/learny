@@ -76,7 +76,9 @@ exports.getComplaintByComplaintId = async (req, res) => {
             data: { complaint },
         });
     } catch (err) {
-        errorHandlerMw(err, res);
+        e;
+
+        rrorHandlerMw(err, res);
     }
 };
 

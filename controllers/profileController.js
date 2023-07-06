@@ -11,6 +11,7 @@ exports.getUser = async (req, res) => {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
         const user = await User.findById(userId).exec();
+
         if (!user) {
             return res.status(204).json({ message: "ERROR no user" });
         }

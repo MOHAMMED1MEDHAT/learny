@@ -1,3 +1,4 @@
+//TODO: DELETE THIS FILE
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const UserCourse = require("../models/userCoursesModel");
 const Course = require("../models/coursesModel");
