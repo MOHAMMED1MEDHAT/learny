@@ -48,14 +48,21 @@ exports.getNumOfUserForEachSubscriptionLevel = async (req, res) => {
             {
                 $group: {
                     _id: "$subscription",
-                    numTracks: { $sum: 1 },
+                    numOfSubscripers: { $sum: 1 },
                 },
             },
         ]);
 
+        const ResponseObj = stats.map((stat) => {
+            return {
+                subscriptionLevel: stat._id,
+                numOfSubscripers: stat.numOfSubscripers,
+            };
+        });
+
         res.status(200).json({
             message: "success",
-            data: { stats },
+            ResponseObj,
         });
     } catch (err) {
         errorHandlerMw(err, res);
