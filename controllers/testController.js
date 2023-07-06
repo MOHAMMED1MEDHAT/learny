@@ -1,6 +1,10 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Test = require("../models/testModel");
 const UserTest = require("../models/userTestModel");
+const UserTrack = require("../models/userTrackModel");
+const UserCourse = require("../models/userCoursesModel");
+const userTrackService = require("./../services/userTrackService");
+const userCourseService = require("./../services/userCourseService");
 const APIfeatures = require("./../util/queryHandler");
 const { calcGrade } = require("./../services/userTestService");
 
@@ -92,23 +96,53 @@ exports.addTest = async (req, res) => {
 exports.addUserAnswersToTestById = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
-        const testId = req.params.id;
+        const { testId, type, typeId } = req.query;
 
-        const { answers } = req.body;
+        // console.log(
+        //     "userId",
+        //     userId,
+        //     "testId",
+        //     testId,
+        //     "type",
+        //     type,
+        //     "typeId",
+        //     typeId
+        // );
+        //TODO: remove after Test
 
-        const { grade, message, correctAndNotObj } = await calcGrade({
-            UserTest,
-            Test,
-            userId,
-            testId,
-            answers,
-        });
+        // const { answers } = req.body;
+
+        // const { grade, message, correctAndNotObj } = await calcGrade({
+        //     UserTest,
+        //     Test,
+        //     userId,
+        //     testId,
+        //     answers,
+        // });
+
+        const message = "passed";
 
         if (message === "passed") {
+            if (type === "track") {
+                await userTrackService.updateTrackPassedState({
+                    UserTrack,
+                    trackId: typeId,
+                    userId,
+                    isPassed: true,
+                });
+            } else if (type === "course") {
+                await userCourseService.updateCoursePassedState({
+                    UserCourse,
+                    courseId: typeId,
+                    userId,
+                    isPassed: true,
+                });
+            }
         }
 
         res.status(200).json({
-            data: { grade, message, correctAndNotObj },
+            // data: { grade, message, correctAndNotObj },
+            data: { test: "test" },
         });
     } catch (err) {
         errorHandlerMw(err, res);

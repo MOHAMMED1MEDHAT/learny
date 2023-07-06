@@ -51,3 +51,23 @@ exports.unsubscripe = async ({ UserCourse, userId, courseId }) => {
 
     return userCourse;
 };
+
+exports.updateCoursePassedState = async ({
+    UserCourse,
+    userId,
+    courseId,
+    isPassed,
+}) => {
+    const userCourse = await UserCourse.findOne({ userId }).exec();
+
+    const { courses } = userCourse;
+
+    for (const course of courses) {
+        if (course.courseId == courseId) {
+            course.passed = isPassed;
+            // console.log("course.passed", course.passed);
+        }
+    }
+
+    await UserCourse.findOneAndUpdate({ userId }, { courses }).exec();
+};

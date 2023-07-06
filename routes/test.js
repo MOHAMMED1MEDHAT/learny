@@ -15,8 +15,8 @@ router.post("/", testValidator, Test.addTest);
 
 //add user test answers
 router.post(
-    "/userAnswer/:id",
-    userAnswerValidator,
+    "/userAnswer/",
+    // userAnswerValidator,
     Test.addUserAnswersToTestById
 );
 
