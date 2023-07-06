@@ -1,5 +1,3 @@
-const Track = require("./trackModel");
-// const Service = require("./../services/courseService");
 const mongoose = require("mongoose");
 const CourseService = require("./../services/courseService");
 
@@ -69,8 +67,9 @@ courseSchema.virtual("id").get(function () {
 
 courseSchema.pre("findOneAndDelete", async function (next) {
     // console.log(this._conditions._id);
-    const cs = new CourseService(this);
-    await cs.deleteCourseFromAllTracks(Track, this._conditions._id);
+    await CourseService.deleteCourseFromAllTracks({
+        courseId: this._conditions._id,
+    });
     // await Service.deleteCourse(Track, this._conditions._id);
     // console.log("deleting course from all tracks that it was in ....");
     next();

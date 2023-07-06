@@ -65,8 +65,6 @@ exports.getCourseByCourseId = async (req, res) => {
 //add course
 exports.addCourse = async (req, res) => {
     try {
-        const CourseService = new courseService(Course);
-
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
@@ -75,7 +73,7 @@ exports.addCourse = async (req, res) => {
         const { courseName, links, imageUrl, testId, totalWatchTime } =
             req.body;
 
-        if (await CourseService.isNameExist(courseName)) {
+        if (await courseService.isNameExist({ courseName })) {
             return res.status(409).json({ message: "this name is used" });
         }
 
@@ -176,6 +174,7 @@ exports.updateCourseLinksByCourseId = async (req, res) => {
 exports.subscripeToCourseByCourseId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const courseId = req.params.id;
 
         if (!mongoose.isValidObjectId(req.params.id)) {
             return res.status(400).json({ message: "Invalid id" });
@@ -183,11 +182,11 @@ exports.subscripeToCourseByCourseId = async (req, res) => {
 
         //add subscription to courses Model
         const course = await courseService.subscripe({
-            Course,
             userId,
-            courseId: req.params.id,
+            courseId,
         });
 
+        //TODO: REMOVE IN PRODUCTION
         if (course === "subscriped".toUpperCase()) {
             return res.status(400).json({ message: "User subscriped before" });
         }
@@ -199,7 +198,7 @@ exports.subscripeToCourseByCourseId = async (req, res) => {
         //add subscription to userCourses Model
         await userCourseService.subscripe({
             userId,
-            courseId: req.params.id,
+            courseId,
         });
 
         res.status(200).json({
@@ -222,7 +221,6 @@ exports.unsubscripeToCourseByCourseId = async (req, res) => {
 
         //remove subscription to course Model
         const course = await courseService.unsubscripe({
-            Course,
             userId,
             courseId: req.params.id,
         });
