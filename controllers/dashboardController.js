@@ -247,18 +247,19 @@ exports.getTotalEntitiesNums = async (req, res) => {
             },
         ]);
 
-        let stats = {};
-        stats.trackNums = trackNums.length == 0 ? 0 : trackNums[0].nums;
-        stats.courseNums = courseNums.length == 0 ? 0 : courseNums[0].nums;
-        stats.complaintNums =
+        const ResponseObj = {};
+        ResponseObj.trackNums = trackNums.length == 0 ? 0 : trackNums[0].nums;
+        ResponseObj.courseNums =
+            courseNums.length == 0 ? 0 : courseNums[0].nums;
+        ResponseObj.complaintNums =
             complaintNums.length == 0 ? 0 : complaintNums[0].nums;
-        stats.testmonialNums =
+        ResponseObj.testmonialNums =
             testmonialNums.length == 0 ? 0 : testmonialNums[0].nums;
-        stats.planNums = planNums.length == 0 ? 0 : planNums[0].nums;
+        ResponseObj.planNums = planNums.length == 0 ? 0 : planNums[0].nums;
 
         res.status(200).json({
             message: "success",
-            data: { stats },
+            ResponseObj,
         });
     } catch (err) {
         errorHandlerMw(err, res);
