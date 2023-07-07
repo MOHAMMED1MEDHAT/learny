@@ -1,7 +1,7 @@
 sendErrorDev = (err, res) => {
     res.status(500).json({
         status: "fail",
-        errorMassage: { err },
+        errorMassage: err.message,
     });
 };
 
@@ -9,7 +9,7 @@ sendErrorProd = (err, res) => {
     if (err.isOperational) {
         res.status(err.statusCode).json({
             status: "fail",
-            errorMassage: { err },
+            errorMassage: err.message,
         });
     } else {
         res.status(500).json({
