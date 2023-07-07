@@ -1,13 +1,33 @@
+sendErrorDev = (err, res) => {
+    res.status(500).json({
+        status: "fail",
+        errorMassage: { err },
+    });
+};
+
+sendErrorProd = (err, res) => {
+    if (err.isOperational) {
+        res.status(err.statusCode).json({
+            status: "fail",
+            errorMassage: { err },
+        });
+    } else {
+        res.status(500).json({
+            status: "fail",
+            errorMassage: "Something went wrong",
+        });
+    }
+};
+
 module.exports = (err, res, next) => {
     if (!err) {
         next();
     } else {
-        // const errMessage = err.inner.message;
         console.log(err);
-        return res.status(500).json({
-            status: "fail",
-            message: "Internal server error ",
-            errorMessage: err.message,
-        });
+        if (process.env.NODE_ENV === "development") {
+            sendErrorDev(err, res);
+        } else if (process.env.NODE_ENV === "production") {
+            sendErrorProd(err, res);
+        }
     }
 };

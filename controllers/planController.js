@@ -38,11 +38,13 @@ exports.getAllPlans = async (req, res) => {
 
 exports.getPlanById = async (req, res) => {
     try {
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        const planId = req.params.id;
+
+        if (!mongoose.isValidObjectId(planId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const plan = await Plan.findById(req.params.id).exec();
+        const plan = await Plan.findById(planId).exec();
 
         if (!plan) {
             return res.status(204).json({ message: "plan not found" });
