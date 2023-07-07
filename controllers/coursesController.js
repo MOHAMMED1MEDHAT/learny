@@ -75,10 +75,6 @@ exports.addCourse = async (req, res) => {
         const { courseName, links, imageUrl, testId, totalWatchTime } =
             req.body;
 
-        if (await courseService.isNameExist({ courseName })) {
-            return res.status(409).json({ message: "this name is used" });
-        }
-
         const course = await Course.create({
             courseName,
             links,

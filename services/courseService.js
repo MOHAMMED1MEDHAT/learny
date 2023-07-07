@@ -85,11 +85,3 @@ exports.deleteCourseFromAllTracks = async ({ courseId }) => {
         }
     });
 };
-
-exports.isNameExist = async ({ courseName }) => {
-    const courseAddedBefore = await Course.findOne({
-        courseName,
-    }).exec();
-
-    return courseAddedBefore ? true : false;
-};

@@ -147,13 +147,13 @@ exports.addTrack = async (req, res) => {
             testId,
             certificateLink,
         } = req.body;
-        const trackAddedBefore = await Track.findOne({
-            categoryName,
-        }).exec();
+        // const trackAddedBefore = await Track.findOne({
+        //     categoryName,
+        // }).exec();
 
-        if (trackAddedBefore) {
-            return res.status(409).json({ message: "this name is used" });
-        }
+        // if (trackAddedBefore) {
+        //     return res.status(409).json({ message: "this name is used" });
+        // }
 
         const track = await Track.create({
             categoryName,
