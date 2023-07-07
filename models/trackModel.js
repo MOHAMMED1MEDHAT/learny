@@ -23,6 +23,7 @@ const trackSchema = new mongoose.Schema(
         categoryName: {
             type: String,
             trim: true,
+            unique: true,
             required: [true, "A track must have a categoryName"],
         },
         roadmap: [String],

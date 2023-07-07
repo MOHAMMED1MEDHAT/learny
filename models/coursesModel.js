@@ -35,6 +35,7 @@ const courseSchema = new mongoose.Schema(
         courseName: {
             type: String,
             trim: true,
+            unique: true,
             required: [true, "A course must have a courseName"],
         },
         links: [linksSchema],
