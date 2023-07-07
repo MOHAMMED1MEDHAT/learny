@@ -2,14 +2,16 @@ sendErrorDev = (err, res) => {
     res.status(500).json({
         status: "fail",
         errorMassage: err.message,
+        errorStack: err.stack,
     });
 };
 
 sendErrorProd = (err, res) => {
     if (err.isOperational) {
-        res.status(err.statusCode).json({
+        res.status(500).json({
             status: "fail",
             errorMassage: err.message,
+            errorStack: err.stack,
         });
     } else {
         res.status(500).json({
