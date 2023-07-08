@@ -5,6 +5,7 @@ const planSchema = new mongoose.Schema(
         planName: {
             type: String,
             trim: true,
+            unique: true,
             required: [true, "A plan must have a planName"],
         },
         features: [String],

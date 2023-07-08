@@ -154,11 +154,18 @@ exports.addPlan = async (req, res) => {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        const { planName, features, costOfPlan, subscriptionType } = req.body;
+        const {
+            planName,
+            features,
+            costOfPlan,
+            subscriptionType,
+            priceDiscount,
+        } = req.body;
 
         const plan = await Plan.create({
             planName,
             features,
+            priceDiscount,
             costOfPlan,
             subscriptionType,
         });
@@ -176,21 +183,29 @@ exports.addPlan = async (req, res) => {
 exports.updatePlanById = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const planId = req.params.id;
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        if (!mongoose.isValidObjectId(planId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const { planName, features, costOfPlan, subscriptionType } = req.body;
+        const {
+            planName,
+            features,
+            costOfPlan,
+            subscriptionType,
+            priceDiscount,
+        } = req.body;
 
         const plan = await Plan.findByIdAndUpdate(
-            req.params.id,
+            planId,
             {
                 planName,
                 features,
+                priceDiscount,
                 costOfPlan,
                 subscriptionType,
             },
@@ -213,15 +228,17 @@ exports.updatePlanById = async (req, res) => {
 exports.deletePlan = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const planId = req.params.id;
+
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        if (!mongoose.isValidObjectId(planId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const plan = await Plan.findByIdAndDelete(req.params.id).exec();
+        const plan = await Plan.findByIdAndDelete(planId).exec();
 
         if (!plan) {
             return res.status(400).json({ message: "Bad Request" });

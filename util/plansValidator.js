@@ -13,6 +13,9 @@ const schema = {
                 type: "string",
             },
         },
+        priceDiscount: {
+            type: "string",
+        },
         costOfPlan: {
             type: "string",
         },
