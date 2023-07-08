@@ -1,4 +1,7 @@
-exports.calcGrade = async ({ UserTest, Test, userId, testId, answers }) => {
+const UserTest = require("../models/userTestModel");
+const Test = require("../models/testModel");
+
+exports.calcGrade = async ({ userId, testId, answers }) => {
     const test = await Test.findById(testId);
 
     const answerRatio = 100 / test.questions.length;
@@ -32,7 +35,7 @@ exports.calcGrade = async ({ UserTest, Test, userId, testId, answers }) => {
             }
         });
 
-    const userTest = await UserTest.create({
+    await UserTest.create({
         userId,
         testId,
         grade,

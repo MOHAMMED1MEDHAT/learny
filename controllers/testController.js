@@ -1,6 +1,5 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Test = require("../models/testModel");
-const UserTest = require("../models/userTestModel");
 const UserTrack = require("../models/userTrackModel");
 const UserCourse = require("../models/userCoursesModel");
 const userTrackService = require("./../services/userTrackService");
@@ -25,6 +24,7 @@ exports.getAllTests = async (req, res) => {
             .pagination();
 
         const tests = await APIfeaturesObj.MongooseQuery;
+
         if (tests.length == 0) {
             return res.status(204).json({ message: "No tests were added yet" });
         }
@@ -41,11 +41,13 @@ exports.getAllTests = async (req, res) => {
 
 exports.getTestById = async (req, res) => {
     try {
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        const testId = req.params.id;
+
+        if (!mongoose.isValidObjectId(testId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const test = await Test.findById(req.params.id).exec();
+        const test = await Test.findById(testId).exec();
 
         if (!test) {
             return res.status(204).json({ message: "test not found" });
@@ -63,19 +65,12 @@ exports.getTestById = async (req, res) => {
 exports.addTest = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
         const { testName, questions, successGrade } = req.body;
-
-        const testAddedBefore = await Test.findOne({
-            testName,
-        }).exec();
-
-        if (testAddedBefore) {
-            return res.status(409).json({ message: "this name is used" });
-        }
 
         const test = await Test.create({
             testName,
@@ -97,30 +92,13 @@ exports.addUserAnswersToTestById = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         const { testId, type, typeId } = req.query;
+        const { answers } = req.body;
 
-        // console.log(
-        //     "userId",
-        //     userId,
-        //     "testId",
-        //     testId,
-        //     "type",
-        //     type,
-        //     "typeId",
-        //     typeId
-        // );
-        //TODO: remove after Test
-
-        // const { answers } = req.body;
-
-        // const { grade, message, correctAndNotObj } = await calcGrade({
-        //     UserTest,
-        //     Test,
-        //     userId,
-        //     testId,
-        //     answers,
-        // });
-
-        const message = "passed";
+        const { grade, message, correctAndNotObj } = await calcGrade({
+            testId,
+            userId,
+            answers,
+        });
 
         if (message === "passed") {
             if (type === "track") {
@@ -141,8 +119,8 @@ exports.addUserAnswersToTestById = async (req, res) => {
         }
 
         res.status(200).json({
-            // data: { grade, message, correctAndNotObj },
-            data: { test: "test" },
+            message: "success",
+            data: { grade, message, correctAndNotObj },
         });
     } catch (err) {
         errorHandlerMw(err, res);
@@ -157,14 +135,14 @@ exports.updateTestById = async (req, res) => {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        if (!mongoose.isValidObjectId(testId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
         const { testName, questions, successGrade } = req.body;
 
         const test = await Test.findByIdAndUpdate(
-            req.params.id,
+            testId,
             {
                 testName,
                 questions,
@@ -193,11 +171,11 @@ exports.deleteTest = async (req, res) => {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        if (!mongoose.isValidObjectId(req.params.id)) {
+        if (!mongoose.isValidObjectId(testId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const test = await Test.findByIdAndDelete(req.params.id).exec();
+        const test = await Test.findByIdAndDelete(testId).exec();
 
         if (!test) {
             return res.status(400).json({ message: "Bad Request" });

@@ -7,6 +7,7 @@ const testSchema = new mongoose.Schema(
         testName: {
             type: String,
             trim: true,
+            unique: true,
             required: [true, "A test must have a testName"],
         },
         questions: [

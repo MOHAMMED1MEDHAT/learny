@@ -104,7 +104,7 @@ const server = app.listen(port, () => {
     console.log(`listening ....!!! on port:${port}`);
 });
 
-//sockets logic---------------------------
+//sockets-logic---------------------------
 const {
     setUpConnection,
     deleteConnection,
