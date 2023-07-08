@@ -88,7 +88,7 @@ exports.addTest = async (req, res) => {
 };
 
 //test answers for each user
-exports.addUserAnswersToTestById = async (req, res) => {
+exports.CheckUserAnswersToTestById = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
         const { testId, type, typeId } = req.query;
@@ -123,6 +123,7 @@ exports.addUserAnswersToTestById = async (req, res) => {
             data: { grade, message, correctAndNotObj },
         });
     } catch (err) {
+        console.log(err);
         errorHandlerMw(err, res);
     }
 };

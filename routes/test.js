@@ -15,9 +15,9 @@ router.post("/", testValidator, Test.addTest);
 
 //add user test answers
 router.post(
-    "/userAnswer/",
+    "/CheckUserAnswer/",
     // userAnswerValidator,
-    Test.addUserAnswersToTestById
+    Test.CheckUserAnswersToTestById
 );
 
 //update test by test id
