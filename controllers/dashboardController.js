@@ -30,7 +30,7 @@ exports.getNumOfUser = async (req, res) => {
 
         res.status(200).json({
             message: "success",
-            ResponseObj,
+            data: { ResponseObj },
         });
     } catch (err) {
         errorHandlerMw(err, res);
@@ -62,7 +62,7 @@ exports.getNumOfUserForEachSubscriptionLevel = async (req, res) => {
 
         res.status(200).json({
             message: "success",
-            ResponseObj,
+            data: { ResponseObj },
         });
     } catch (err) {
         errorHandlerMw(err, res);
@@ -94,7 +94,7 @@ exports.getAllTracksSubscripersNum = async (req, res) => {
 
         res.status(200).json({
             message: "success",
-            ResponseObj,
+            data: { ResponseObj },
         });
     } catch (err) {
         errorHandlerMw(err, res);
@@ -129,7 +129,7 @@ exports.getEachTrackSubscripersNum = async (req, res) => {
 
         res.status(200).json({
             message: "success",
-            ResponseObj,
+            data: { ResponseObj },
         });
     } catch (err) {
         errorHandlerMw(err, res);
@@ -173,7 +173,7 @@ exports.getEachMonthUsersSubs = async (req, res) => {
 
         res.status(200).json({
             message: "success",
-            ResponseObj,
+            data: { ResponseObj },
         });
     } catch (err) {
         errorHandlerMw(err, res);
@@ -259,7 +259,7 @@ exports.getTotalEntitiesNums = async (req, res) => {
 
         res.status(200).json({
             message: "success",
-            ResponseObj,
+            data: { ResponseObj },
         });
     } catch (err) {
         errorHandlerMw(err, res);

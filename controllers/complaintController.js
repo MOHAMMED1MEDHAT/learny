@@ -5,7 +5,6 @@ const APIfeatures = require("./../util/queryHandler");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const config = require("config");
-const c = require("config");
 const jwtSCRT = config.get("env_var.jwtScreteKey");
 
 //get all complaints

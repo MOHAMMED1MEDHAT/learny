@@ -16,9 +16,19 @@ exports.getUser = async (req, res) => {
             return res.status(204).json({ message: "ERROR No User" });
         }
 
+        const ResponseObj = {
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            imageUrl: user.imageUrl,
+            address: user.address,
+            dateOfbirth: user.dateOfBirth,
+            subscription: user.subscription,
+        };
+
         res.status(200).json({
             message: "user found",
-            data: { user },
+            data: { ResponseObj },
         });
     } catch (err) {
         errorHandlerMw(err, res);
