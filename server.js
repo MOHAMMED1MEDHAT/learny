@@ -11,7 +11,7 @@ const errorHandler = require("./middlewares/errorHandlerMw");
 
 const app = express();
 
-// FIXME: ENABLE ON DEPLOYMENT
+// // FIXME: ENABLE ON DEPLOYMENT
 process.on("uncaughtException", (exception) => {
     console.log("uncaught Exception" + exception);
 });
@@ -30,7 +30,7 @@ mongoose
     .then(() => {
         console.log("Connected to db");
     })
-    .catch((err) => console.log("error occured" + err));
+    .catch((err) => console.log("error occured :" + err));
 
 //adding a CSP to secure from XSS
 // app.use(helmet.contentSecurityPolicy({
@@ -53,7 +53,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(authJwt());
-// app.use(errorHandler);
 
 //routes
 const userRouter = require("./routes/user");
@@ -96,6 +95,9 @@ app.all("*", (req, res, next) => {
         message: `can't find ${req.originalUrl} on this server`,
     });
 });
+
+//error handler
+app.use(errorHandler);
 
 const port = process.env.PORT;
 const server = app.listen(port, () => {

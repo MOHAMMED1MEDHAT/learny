@@ -1,10 +1,11 @@
-const errorHandlerMw = require("../middlewares/errorHandlerMw");
+const errorHandlerMw = require("./../middlewares/errorHandlerMw");
 const Complaint = require("../models/complaintsModel");
 const APIfeatures = require("./../util/queryHandler");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const c = require("config");
 const jwtSCRT = config.get("env_var.jwtScreteKey");
 
 //get all complaints
@@ -32,7 +33,6 @@ exports.getAllComplaints = async (req, res) => {
             data: { complaints },
         });
     } catch (err) {
-        // console.log(err);
         errorHandlerMw(err, res);
     }
 };

@@ -9,13 +9,13 @@ router
     .get(Complaint.getAllComplaints)
     .post(validator, Complaint.addComplaint);
 
+router.get("/user", Complaint.getAllComplaintsByUserId);
+
 router
     .route("/:id")
     .get(Complaint.getComplaintByComplaintId)
     .put(validator, Complaint.updateComplaintByComplaintId)
     .delete(Complaint.deleteComplaintByComplaintId);
-
-router.get("/user", Complaint.getAllComplaintsByUserId);
 
 // router.get("/:id", Complaint.getComplaintByComplaintId);
 
