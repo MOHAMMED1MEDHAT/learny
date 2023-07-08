@@ -132,6 +132,7 @@ exports.CheckUserAnswersToTestById = async (req, res) => {
 exports.updateTestById = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const testId = req.params.id;
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
@@ -168,6 +169,8 @@ exports.updateTestById = async (req, res) => {
 exports.deleteTest = async (req, res) => {
     try {
         const { isAdmin } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const testId = req.params.id;
+
         if (!isAdmin) {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
