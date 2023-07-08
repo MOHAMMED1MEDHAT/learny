@@ -15,7 +15,7 @@ router.get("/payment/paymob/callback", Plan.postPaymentOps);
 router.get("/payment/paymob/:id", Plan.subscripeToPlan);
 
 router
-    .route("/")
+    .route("/:id")
     //get plan by plan id
     .get(Plan.getPlanById)
     //update plan by plan id
