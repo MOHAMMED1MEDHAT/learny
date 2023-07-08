@@ -13,7 +13,7 @@ exports.getUser = async (req, res) => {
         const user = await User.findById(userId).exec();
 
         if (!user) {
-            return res.status(204).json({ message: "ERROR no user" });
+            return res.status(204).json({ message: "ERROR No User" });
         }
 
         res.status(200).json({
