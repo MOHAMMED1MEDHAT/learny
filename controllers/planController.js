@@ -63,10 +63,11 @@ exports.subscripeToPlan = async (req, res) => {
     try {
         //A.1: get the paymet data
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+        const planId = req.params.id;
 
         const user = await User.findById(userId);
         //A.2:get plan data
-        const plan = await Plan.findById(req.params.id);
+        const plan = await Plan.findById(planId).exec();
 
         //A.3: calculate the plan cost
         const cost =
