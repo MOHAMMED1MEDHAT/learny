@@ -70,7 +70,7 @@ exports.getAllTracks = async (req, res) => {
                         ...track.toObject(),
                         status: isSubscriped
                             ? isPassed
-                                ? "passed"
+                                ? "start now : finished"
                                 : "subsciped"
                             : "start now",
                     };
