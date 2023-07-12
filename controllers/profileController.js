@@ -20,6 +20,7 @@ exports.getUser = async (req, res) => {
             name: user.name,
             email: user.email,
             phone: user.phone,
+            gender: user.gender,
             imageUrl: user.imageUrl,
             address: user.address,
             dateOfbirth: user.dateOfBirth,

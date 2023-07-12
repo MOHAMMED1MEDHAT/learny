@@ -1,8 +1,9 @@
 const Course = require("../models/coursesModel");
 const Track = require("../models/trackModel");
 
-exports.subscripe = async ({ userId, courseId }) => {
+exports.subscripe = async (userId, courseId) => {
     // console.log(courseId);
+    // console.log(userId);
     const { subscripers } = await Course.findById(courseId).exec();
     for (const subscriper of subscripers) {
         if (subscriper.subscriperId == userId) {
@@ -26,7 +27,7 @@ exports.subscripe = async ({ userId, courseId }) => {
     return course;
 };
 
-exports.unsubscripe = async ({ userId, courseId }) => {
+exports.unsubscripe = async (userId, courseId) => {
     // console.log(courseId);
     const { subscripers } = await Course.findById(courseId).exec();
     let subscriper = {};

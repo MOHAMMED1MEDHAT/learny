@@ -1,6 +1,6 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const Track = require("../models/trackModel");
-const Course = require("../models/coursesModel");
+// const Course = require("../models/coursesModel");
 const UserCourse = require("./../models/userCoursesModel");
 const UserTrack = require("./../models/userTrackModel");
 const { addNotification } = require("./../services/notificationService");
@@ -71,8 +71,8 @@ exports.getAllTracks = async (req, res) => {
                         status: isSubscriped
                             ? isPassed
                                 ? "start now : finished"
-                                : "subsciped"
-                            : "start now",
+                                : "start now"
+                            : "subscripe",
                     };
                 })
             );
