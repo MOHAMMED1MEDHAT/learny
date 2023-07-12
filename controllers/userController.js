@@ -60,24 +60,13 @@ exports.resetPasswordController = async (req, res, next) => {
 
 exports.login = async (req, res) => {
     try {
-        // console.log(req.body);
         const { email, password } = req.body;
 
         const user = await User.findOne({ email }).exec();
-        //test--------------------
-        // console.log(user);
-        //test--------------------
-        if (!user) {
-            return res
-                .status(401)
-                .json({ message: "Invalid email or password" });
-        }
 
         const validPass = await bcrypt.compare(password, user.password);
-        //test--------------------
-        // console.log(validPass);
-        //test--------------------
-        if (!validPass) {
+
+        if (!user || !validPass) {
             return res
                 .status(401)
                 .json({ message: "Invalid email or password" });
