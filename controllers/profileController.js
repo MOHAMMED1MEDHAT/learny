@@ -24,6 +24,7 @@ exports.getUser = async (req, res) => {
             address: user.address,
             dateOfbirth: user.dateOfBirth,
             subscription: user.subscription,
+            isAdmin: user.isAdmin,
         };
 
         res.status(200).json({
