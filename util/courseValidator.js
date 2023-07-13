@@ -31,11 +31,14 @@ const schema = {
         imageUrl: {
             type: "string",
         },
+        certificateLink: {
+            type: "string",
+        },
         testId: {
             type: "string",
         },
     },
-    required: ["courseName", "links", "imageUrl", "testId"],
+    required: ["courseName", "links", "imageUrl", "certificateLink", "testId"],
 };
 
 module.exports = ajv.compile(schema);

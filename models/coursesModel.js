@@ -49,6 +49,11 @@ const courseSchema = new mongoose.Schema(
             default: "ImageUrl",
             required: [true, "A course must have a imageUrl"],
         },
+        certificateLink: {
+            type: String,
+            trem: true,
+            required: [true, "A Track must have a certificateLink"],
+        },
         testId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "test",

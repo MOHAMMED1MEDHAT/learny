@@ -72,8 +72,14 @@ exports.addCourse = async (req, res) => {
             return res.status(401).json({ message: "UNAUTHORIZED ACTION" });
         }
 
-        const { courseName, links, imageUrl, testId, totalWatchTime } =
-            req.body;
+        const {
+            courseName,
+            links,
+            imageUrl,
+            testId,
+            totalWatchTime,
+            certificateLink,
+        } = req.body;
 
         const course = await Course.create({
             courseName,
@@ -81,6 +87,7 @@ exports.addCourse = async (req, res) => {
             imageUrl,
             testId,
             totalWatchTime,
+            certificateLink,
         });
 
         res.status(200).json({
@@ -106,8 +113,14 @@ exports.updateCourseByCourseId = async (req, res) => {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const { courseName, links, imageUrl, testId, totalWatchTime } =
-            req.body;
+        const {
+            courseName,
+            links,
+            imageUrl,
+            testId,
+            totalWatchTime,
+            certificateLink,
+        } = req.body;
 
         const course = await Course.findByIdAndUpdate(
             courseId,
@@ -117,6 +130,7 @@ exports.updateCourseByCourseId = async (req, res) => {
                 imageUrl,
                 testId,
                 totalWatchTime,
+                certificateLink,
             },
             { runValidators: true, new: true }
         ).exec();
