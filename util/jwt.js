@@ -20,7 +20,7 @@ function auth() {
             "/api/v1/upload/image",
             "/api/v1/testmonial",
             "/api/v1/plan/payment/paymob/callback",
-            "/api/v1/userCertificate/download/64abcc93f44abef19abb60c7",
+            // "/api/v1/userCertificate/download/64abcc93f44abef19abb60c7",
         ],
     });
 }
