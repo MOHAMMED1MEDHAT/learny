@@ -142,7 +142,7 @@ exports.postPaymentOps = async (req, res) => {
         </body>
         </html>`);
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         errorHandlerMw(err, res);
     }
 };

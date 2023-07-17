@@ -25,7 +25,7 @@ const sendEmail = (email, subject, payload, template) => {
         if (error) {
             return res.status(500).json({ message: "Internal server error" });
         } else {
-            console.log("Email sent: " + info.response);
+            // console.log("Email sent: " + info.response);
             return res.status(200).json({
                 success: true,
             });

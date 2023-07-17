@@ -19,15 +19,15 @@ exports.createCertificate = async ({ certificateLink, name }) => {
                 __dirname
             )}/assets/images/${Date.now()}${path.extname(certificateLink)}`
         );
-        console.log(filename);
+        // console.log(filename);
         //2- write user name on certificate
         //LOAD MODULES
         //SETTINGS - CHANGE FONT TO YOUR OWN!
         const sFile = filename; // source image
         const sSave = filename.replace("images", "pdfs"); // "save as"
         const sText = name; // text to write
-        const sX = 380;
-        const sY = 80; // text position
+        const sX = 380; // text position x
+        const sY = 80; // text position y
 
         // //LOAD IMAGE + DRAW TEXT
         const img = await loadImage(sFile);
@@ -37,7 +37,7 @@ exports.createCertificate = async ({ certificateLink, name }) => {
         ctx.drawImage(img, 0, 0);
 
         //TEXT DIMENSIONS
-        ctx.font = "30px Arial";
+        ctx.font = "100px Arial";
         ctx.fillStyle = "rgb(0, 0, 0)";
         ctx.lineWidth = 2;
         ctx.strokeStyle = "rgb(0, 0, 0)";
@@ -65,7 +65,7 @@ exports.createCertificate = async ({ certificateLink, name }) => {
                     throw new Error(error.message);
                 }
                 userCertificateLink = result.url;
-                console.log(result.url);
+                // console.log(result.url);
             }
         );
         //4-delete all certificate assets from local storage (images,pdfs)
@@ -87,7 +87,7 @@ exports.createCertificate = async ({ certificateLink, name }) => {
 
         return { userCertificateLink };
     } catch (error) {
-        console.log(error, error.stack);
+        // console.log(error, error.stack);
         throw new Error("Error in creating certificateLink", error.message);
     }
 };
@@ -124,7 +124,7 @@ async function downloadImage(url, filename) {
 
     fs.writeFileSync(filePath, response.data, (err) => {
         if (err) throw err;
-        console.log("Image downloaded successfully!");
+        // console.log("Image downloaded successfully!");
     });
     return filePath;
 }

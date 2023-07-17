@@ -123,7 +123,7 @@ exports.CheckUserAnswersToTestById = async (req, res) => {
             data: { grade, message, correctAndNotObj },
         });
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         errorHandlerMw(err, res);
     }
 };
