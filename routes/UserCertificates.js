@@ -6,11 +6,10 @@ const router = require("express").Router();
 //get all userTests by userId
 router.get("/", UserCertificate.getAllUserCertificatesByUserId);
 
+router.get("/download/:id", UserCertificate.downloadCertificate);
 //get  all userTests by test id
 router.get("/:id", UserCertificate.getAllUserCertificateById);
 
 router.post("/", validator, UserCertificate.addUserCertificate);
-
-router.get("/download/:id", UserCertificate.downloadCertificate);
 
 module.exports = router;

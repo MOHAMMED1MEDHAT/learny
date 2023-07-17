@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const jwtSCRT = config.get("env_var.jwtScreteKey");
 
-exports.getUserCoursesByUserId = async (req, res) => {
+exports.getUserTracksByUserId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
@@ -22,11 +22,11 @@ exports.getUserCoursesByUserId = async (req, res) => {
         }).exec();
 
         if (!userTrack) {
-            return res.status(204).json({ message: "user Course not found" });
+            return res.status(204).json({ message: "user track not found" });
         }
 
         res.status(200).json({
-            message: "userCourse found",
+            message: "userTrack found",
             data: { userTrack },
         });
     } catch (err) {

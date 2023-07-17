@@ -75,19 +75,29 @@ exports.updateWatchedTimeByCourseId = async (req, res) => {
             return res.status(400).json({ message: "Invalid id" });
         }
 
-        const genralCourse = await Course.findById(req.params.id);
+        const generalCourse = await Course.findById(req.params.id);
 
         const { time } = req.body;
 
         const { courses } = await UserCourse.findOne({ userId }).exec();
-        for (const course of courses) {
+
+        // for (const course of courses) {
+        //     if (course.courseId == req.params.id) {
+        //         course.watched = time;
+        //         if (course.watched == generalCourse.totalWatchTime) {
+        //             course.passed = true;
+        //         }
+        //     }
+        // }
+
+        courses.map((course) => {
             if (course.courseId == req.params.id) {
                 course.watched = time;
-                if (course.watched == genralCourse.totalWatchTime) {
+                if (course.watched == generalCourse.totalWatchTime) {
                     course.passed = true;
                 }
             }
-        }
+        });
 
         const userCourse = await UserCourse.findOneAndUpdate(
             userId,
@@ -96,7 +106,9 @@ exports.updateWatchedTimeByCourseId = async (req, res) => {
             },
             { returnOriginal: false }
         ).exec();
+
         // console.log(userCourse);
+
         if (!userCourse) {
             return res.status(400).json({ message: "Bad Request" });
         }
@@ -110,41 +122,41 @@ exports.updateWatchedTimeByCourseId = async (req, res) => {
     }
 };
 
-//update course status by course id
-// exports.updateCourseStatusByCourseId = async (req, res) => {
-//     try {
-//         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
+// update course status by course id
+exports.updateCourseStatusByCourseId = async (req, res) => {
+    try {
+        const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
-//         if (!mongoose.isValidObjectId(req.params.id)) {
-//             return res.status(400).json({ message: "Invalid id" });
-//         }
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(400).json({ message: "Invalid id" });
+        }
 
-//         const { passed } = req.body;
+        const { passed } = req.body;
 
-//         const { courses } = await UserCourse.findOne({ userId }).exec();
-//         for (const course of courses) {
-//             if (course.courseId == req.params.id) {
-//                 course.passed = passed;
-//             }
-//         }
+        const { courses } = await UserCourse.findOne({ userId }).exec();
+        for (const course of courses) {
+            if (course.courseId == req.params.id) {
+                course.passed = passed;
+            }
+        }
 
-//         const userCourse = await UserCourse.findOneAndUpdate(
-//             userId,
-//             {
-//                 courses,
-//             },
-//             { returnOriginal: false }
-//         ).exec();
+        const userCourse = await UserCourse.findOneAndUpdate(
+            userId,
+            {
+                courses,
+            },
+            { returnOriginal: false }
+        ).exec();
 
-//         if (!userCourse) {
-//             return res.status(400).json({ message: "Bad Request" });
-//         }
+        if (!userCourse) {
+            return res.status(400).json({ message: "Bad Request" });
+        }
 
-//         res.status(200).json({
-//             message: "user course  status was updated successfully",
-//             data: { userCourse },
-//         });
-//     } catch (err) {
-//         errorHandlerMw(err, res);
-//     }
-// };
+        res.status(200).json({
+            message: "user course  status was updated successfully",
+            data: { userCourse },
+        });
+    } catch (err) {
+        errorHandlerMw(err, res);
+    }
+};
