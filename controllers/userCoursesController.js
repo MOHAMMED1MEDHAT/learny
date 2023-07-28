@@ -2,7 +2,7 @@
 const errorHandlerMw = require("../middlewares/errorHandlerMw");
 const UserCourse = require("../models/userCoursesModel");
 const Course = require("../models/coursesModel");
-const APIfeatures = require("./../util/queryHandler");
+// const APIfeatures = require("./../util/queryHandler");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
@@ -14,6 +14,8 @@ exports.getUserCoursesByUserId = async (req, res) => {
     try {
         const { userId } = jwt.verify(req.header("x-auth-token"), jwtSCRT);
 
+        // console.log(userId);
+
         if (!mongoose.isValidObjectId(userId)) {
             return res.status(400).json({ message: "Invalid id" });
         }
@@ -21,6 +23,8 @@ exports.getUserCoursesByUserId = async (req, res) => {
         const userCourse = await UserCourse.findOne({
             userId,
         }).exec();
+
+        // console.log(userCourse);
 
         if (!userCourse) {
             return res.status(204).json({ message: "user Course not found" });
