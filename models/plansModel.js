@@ -31,6 +31,11 @@ const planSchema = new mongoose.Schema(
             default: "FREE",
             required: [true, "A plan must have a subscriptionLevel"],
         },
+        subscriptionPeriod: {
+            type: String,
+            trim: true,
+            required: [true, "A plan must have a subscriptionPeriod"],
+        },
     },
     {
         toJSON: { virtuals: true },

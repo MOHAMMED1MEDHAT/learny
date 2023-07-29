@@ -63,6 +63,13 @@ const userSchema = new mongoose.Schema(
             default: "FREE",
             required: [true, "A user must have a subscription"],
         },
+        subscriptionStartDate: {
+            type: Date,
+        },
+        subscriptionPeriod: {
+            type: String,
+            trim: true,
+        },
         isAdmin: {
             type: Boolean,
             default: false,
@@ -78,6 +85,28 @@ const userSchema = new mongoose.Schema(
 userSchema.virtual("id").get(function () {
     return this._id.toHexString();
 });
+
+// userSchema.pre(/^find/,function(next){
+//     if(this.IsSubsriptionExpired)
+//     next()
+// })
+
+userSchema.methods.IsSubsriptionExpired = function () {
+    if (this.subscriptionPeriod.toUpperCase() === "MONTH") {
+        const subscriptionEndDate = new Date(this.subscriptionStartDate);
+        subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 1);
+        if (subscriptionEndDate < new Date()) {
+            return true;
+        }
+    } else if (this.subscriptionPeriod.toUpperCase() === "YEAR") {
+        const subscriptionEndDate = new Date(this.subscriptionStartDate);
+        subscriptionEndDate.setFullYear(subscriptionEndDate.getFullYear() + 1);
+        if (subscriptionEndDate < new Date()) {
+            return true;
+        }
+    }
+    return false;
+};
 
 userSchema.method("getAuthToken", (id, isAdmin) => {
     const token = jwt.sign(

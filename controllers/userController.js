@@ -70,6 +70,14 @@ exports.login = async (req, res) => {
                 .json({ message: "Incorrect email or password" });
         }
 
+        //check if the subscription is expired
+        const expired = user.IsSubsriptionExpired();
+        if (expired) {
+            await User.findByIdAndUpdate(user._id, {
+                subscription: "FREE",
+            });
+        }
+
         const token = user.getAuthToken(user._id, user.isAdmin);
         res.cookie("x-auth-token", token, {
             httpOnly: false,

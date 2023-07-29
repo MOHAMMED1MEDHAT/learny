@@ -22,8 +22,17 @@ const schema = {
         subscriptionType: {
             type: "string",
         },
+        subscriptionPeriod: {
+            type: "string",
+        },
     },
-    required: ["planName", "features", "costOfPlan", "subscriptionType"],
+    required: [
+        "planName",
+        "features",
+        "costOfPlan",
+        "subscriptionType",
+        "subscriptionPeriod",
+    ],
 };
 
 module.exports = ajv.compile(schema);

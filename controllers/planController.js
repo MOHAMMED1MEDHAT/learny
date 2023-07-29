@@ -106,8 +106,13 @@ exports.postPaymentOps = async (req, res) => {
         if (success === "false") {
             message = `subscription Faild to plan ${paymentRequest.planSubscriptionType}`;
         } else {
+            const { subscriptionPeriod } = await Plan.findById(
+                paymentRequest.planId
+            );
             await User.findByIdAndUpdate(paymentRequest.userId, {
                 subscription: paymentRequest.planSubscriptionType,
+                subscriptionStartDate: Date.now(),
+                subscriptionPeriod,
             });
 
             message = `subscriped successfully to plan ${paymentRequest.planSubscriptionType}`;
@@ -160,6 +165,7 @@ exports.addPlan = async (req, res) => {
             costOfPlan,
             subscriptionType,
             priceDiscount,
+            subscriptionPeriod,
         } = req.body;
 
         const plan = await Plan.create({
@@ -168,6 +174,7 @@ exports.addPlan = async (req, res) => {
             priceDiscount,
             costOfPlan,
             subscriptionType,
+            subscriptionPeriod,
         });
 
         res.status(200).json({
@@ -198,6 +205,7 @@ exports.updatePlanById = async (req, res) => {
             costOfPlan,
             subscriptionType,
             priceDiscount,
+            subscriptionPeriod,
         } = req.body;
 
         const plan = await Plan.findByIdAndUpdate(
@@ -208,6 +216,7 @@ exports.updatePlanById = async (req, res) => {
                 priceDiscount,
                 costOfPlan,
                 subscriptionType,
+                subscriptionPeriod,
             },
             { runValidators: true, new: true }
         ).exec();
