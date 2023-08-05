@@ -1,3 +1,4 @@
+const errorHandlerMw = require("./../middlewares/errorHandlerMw");
 const User = require("../models/userModel");
 const {
     requestPasswordReset,
@@ -90,6 +91,7 @@ exports.login = async (req, res) => {
         });
     } catch (err) {
         errorHandlerMw(err, res);
+        // console.log("err", err);
     }
 };
 

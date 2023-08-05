@@ -69,6 +69,7 @@ const userSchema = new mongoose.Schema(
         subscriptionPeriod: {
             type: String,
             trim: true,
+            default: "NON",
         },
         isAdmin: {
             type: Boolean,

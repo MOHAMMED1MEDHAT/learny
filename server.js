@@ -11,7 +11,7 @@ const errorHandler = require("./middlewares/errorHandlerMw");
 
 const app = express();
 
-// // FIXME: ENABLE ON DEPLOYMENT
+// FIXME: ENABLE ON DEPLOYMENT
 process.on("uncaughtException", (exception) => {
     console.log("uncaught Exception" + exception);
 });
