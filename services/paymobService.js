@@ -85,7 +85,7 @@ exports.getPaymobPaymentLink = async ({ user, cost }) => {
 
         return {
             // iframeLink: `https://accept.paymob.com/api/acceptance/iframes/763553?payment_token=${secondToken}`,
-            iframeLink: response.redirect_url,
+            iframeLink: `${response.data.redirect_url}`,
             orderId: id,
         };
     } catch (error) {
