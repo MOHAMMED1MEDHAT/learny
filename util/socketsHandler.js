@@ -23,7 +23,7 @@ exports.deleteConnection = async (token, socketId) => {
     try {
         const { userId } = jwt.verify(token, jwtSCRT);
         let sockets = (await User.findById(userId)).sockets;
-        if (sockets.indexOf(socketId) != -1) {
+        if (sockets.indexOf(socketId) !== -1) {
             sockets.splice(sockets.indexOf(socketId), 1);
         } else {
             console.log(socketId, "Not found");
