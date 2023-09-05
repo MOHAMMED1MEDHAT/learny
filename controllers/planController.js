@@ -69,6 +69,10 @@ exports.subscripeToPlan = async (req, res) => {
         //A.2:get plan data
         const plan = await Plan.findById(planId).exec();
 
+        if (user.subscription === plan.planName) {
+            throw new Error("user subscriped before");
+        }
+
         //A.3: calculate the plan cost
         const cost =
             (plan.costOfPlan - plan.costOfPlan * plan.priceDiscount) * 100;
