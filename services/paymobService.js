@@ -70,18 +70,18 @@ exports.getPaymobPaymentLink = async ({ user, cost }) => {
         );
         const secondToken = paymobThirdResponse.data.token;
 
-        // // A.4.4: Fourth paymob API request to make a wallet payment
-        // const response = await axios.post(
-        //     "https://accept.paymob.com/api/acceptance/payments/pay",
-        //     {
-        //         source: {
-        //             identifier: "wallet mobile number",
-        //             subtype: "WALLET",
-        //         },
-        //         payment_token: secondToken,
-        //     }
-        // );
-        // console.log(response);
+        // A.4.4: Fourth paymob API request to make a wallet payment
+        const response = await axios.post(
+            "https://accept.paymob.com/api/acceptance/payments/pay",
+            {
+                source: {
+                    identifier: "wallet mobile number",
+                    subtype: "WALLET",
+                },
+                payment_token: secondToken,
+            }
+        );
+        console.log(response);
 
         return {
             iframeLink: `https://accept.paymob.com/api/acceptance/iframes/763554?payment_token=${secondToken}`,
