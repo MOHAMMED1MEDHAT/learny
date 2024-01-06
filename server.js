@@ -23,8 +23,6 @@ process.on("unhandledRejection", (exception) => {
 //FIXME:change to ATLAS_CONNECTION_STRING
 mongoose
     .connect(process.env.ATLAS_CONNECTION_STRING, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
         dbName: "E-learnig",
     })
     .then(() => {
