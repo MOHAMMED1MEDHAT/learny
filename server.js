@@ -47,6 +47,12 @@ app.use(
         credentials: true,
     })
 );
+
+//for monitoring
+app.head("/api/v1/monitor", (req, res) => {
+    res.status(200).end();
+});
+
 // app.options("*", cors);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
