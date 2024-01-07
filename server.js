@@ -30,7 +30,7 @@ mongoose
     .then(() => {
         console.log("Connected to db");
     })
-    // .catch((err) => console.log("error occured :" + err));
+    .catch((err) => console.log("error occured :" + err));
 
 //adding a CSP to secure from XSS
 // app.use(helmet.contentSecurityPolicy({
