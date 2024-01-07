@@ -49,7 +49,7 @@ app.use(
 );
 
 //for monitoring
-app.head("/api/v1/monitor", (req, res) => {
+app.get("/api/v1/monitor", (req, res) => {
     res.status(200).end();
 });
 
