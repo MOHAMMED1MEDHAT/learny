@@ -22,13 +22,15 @@ process.on("unhandledRejection", (exception) => {
 //mongoose connection setup
 //FIXME:change to ATLAS_CONNECTION_STRING
 mongoose
-    .connect(process.env.ATLAS_CONNECTION_STRING, {
-        dbName: "E-learnig",
+    .connect(process.env.ATLAS_CONNECTION_STRING,{
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        dbName: "E-learning",
     })
     .then(() => {
         console.log("Connected to db");
     })
-    .catch((err) => console.log("error occured :" + err));
+    // .catch((err) => console.log("error occured :" + err));
 
 //adding a CSP to secure from XSS
 // app.use(helmet.contentSecurityPolicy({
