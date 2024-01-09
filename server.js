@@ -111,7 +111,7 @@ app.all("*", (req, res, next) => {
 //error handler
 app.use(errorHandler);
 
-const port = process.env.PORT;
+const port = process.env.PORT||8081;
 const server = app.listen(port, () => {
     console.log(`listening ....!!! on port:${port}`);
 });
@@ -123,6 +123,7 @@ const {
     userSendNotification,
     adminSendNotification,
 } = require("./util/socketsHandler");
+
 const io = require("socket.io")(server, {
     cors: {
         origin: "*",
