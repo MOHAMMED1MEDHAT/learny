@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const CourseService = require("./../services/courseService");
+const Track=require('./trackModel');
 
 const subscripersSchema = new mongoose.Schema({
     subscriperId: {
@@ -72,12 +73,22 @@ courseSchema.virtual("id").get(function () {
 });
 
 courseSchema.pre("findOneAndDelete", async function (next) {
-    // console.log(this._conditions._id);
-    await CourseService.deleteCourseFromAllTracks({
-        courseId: this._conditions._id,
-    });
-    // await Service.deleteCourse(Track, this._conditions._id);
-    // console.log("deleting course from all tracks that it was in ....");
+    // await CourseService.deleteCourseFromAllTracks({
+    //     courseId: this._conditions._id,
+    // });
+
+    const tracks=await Track.find({courses:this._conditions._id})
+
+    tracks.map(async(track)=>{
+        const idx=track.courses.indexOf(this._conditions._id);
+        track.courses.splice(idx,1);
+
+        await Track.findByIdAndUpdate(track.id,{
+            courses:track.courses
+        })
+
+    })
+
     next();
 });
 

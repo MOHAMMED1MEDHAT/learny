@@ -2,8 +2,6 @@ const Course = require("../models/coursesModel");
 const Track = require("../models/trackModel");
 
 exports.subscripe = async (userId, courseId) => {
-    // console.log(courseId);
-    // console.log(userId);
     const { subscripers } = await Course.findById(courseId).exec();
     for (const subscriper of subscripers) {
         if (subscriper.subscriperId == userId) {
@@ -28,7 +26,6 @@ exports.subscripe = async (userId, courseId) => {
 };
 
 exports.unsubscripe = async (userId, courseId) => {
-    // console.log(courseId);
     const { subscripers } = await Course.findById(courseId).exec();
     let subscriper = {};
     for (const elm of subscripers) {
@@ -50,39 +47,41 @@ exports.unsubscripe = async (userId, courseId) => {
     return course;
 };
 
-exports.deleteCourseFromAllTracks = async ({ courseId }) => {
-    let tracks = await Track.find();
-    //which track has this course
-    tracks = tracks.map((elm) => {
-        const res = elm.courses.map((course) => {
-            return course.courseId == courseId;
-        });
-        for (const flag of res) {
-            if (flag) {
-                return elm._id;
-            }
-        }
-    });
+//FIXME:REFACTOR THIS
+// exports.deleteCourseFromAllTracks = async ({ courseId }) => {
+//     let tracks = await Track.find();
+    
+//     //which track has this course
+//     tracks = tracks.map((elm) => {
+//         const res = elm.courses.map((course) => {
+//             return course.courseId == courseId;
+//         });
+//         for (const flag of res) {
+//             if (flag) {
+//                 return elm._id;
+//             }
+//         }
+//     });
 
-    tracks.map(async (track) => {
-        if (track) {
-            const { courses } = await Track.findById(track);
-            let CourseDocument = {};
-            for (const elm of courses) {
-                if (elm.courseId == courseId) {
-                    CourseDocument = elm;
-                }
-            }
-            const idxOfUserCourse = courses.indexOf(CourseDocument);
-            courses.splice(idxOfUserCourse, 1);
+//     tracks.map(async (track) => {
+//         if (track) {
+//             const { courses } = await Track.findById(track);
+//             let CourseDocument = {};
+//             for (const elm of courses) {
+//                 if (elm.courseId == courseId) {
+//                     CourseDocument = elm;
+//                 }
+//             }
+//             const idxOfUserCourse = courses.indexOf(CourseDocument);
+//             courses.splice(idxOfUserCourse, 1);
 
-            await Track.findOneAndUpdate(
-                track,
-                {
-                    courses,
-                },
-                { returnOriginal: false }
-            ).exec();
-        }
-    });
-};
+//             await Track.findOneAndUpdate(
+//                 track,
+//                 {
+//                     courses,
+//                 },
+//                 { returnOriginal: false }
+//             ).exec();
+//         }
+//     });
+// };
