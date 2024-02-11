@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const CourseService = require("./../services/courseService");
 const Track=require('./trackModel');
 
 const subscripersSchema = new mongoose.Schema({
@@ -73,21 +72,13 @@ courseSchema.virtual("id").get(function () {
 });
 
 courseSchema.pre("findOneAndDelete", async function (next) {
-    // await CourseService.deleteCourseFromAllTracks({
-    //     courseId: this._conditions._id,
-    // });
+    const tracks=await Track.find({courses:{$elemMatch:{courseId:this._conditions._id}}});
 
-    const tracks=await Track.find({courses:this._conditions._id})
-
-    tracks.map(async(track)=>{
+    for(const track of tracks){
         const idx=track.courses.indexOf(this._conditions._id);
         track.courses.splice(idx,1);
-
-        await Track.findByIdAndUpdate(track.id,{
-            courses:track.courses
-        })
-
-    })
+        await Track.findByIdAndUpdate(track._id,{courses:track.courses})
+    }
 
     next();
 });
