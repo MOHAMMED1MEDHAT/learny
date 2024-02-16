@@ -98,7 +98,7 @@ app.use("/api/v1/dashboard", dashboardRouter); //test
 app.use("/api/v1/notifications", notificationsRouter); //test
 
 app.use("/api/v1/downloadModel",async(req,res)=>{
-    const filePath = path.join(__dirname, 'assets/test/sum.tflite');
+    const filePath = __dirname + "/assets/test/sum.tflite";
 
     // Check if the file exists
     if (fs.existsSync(filePath)) {
