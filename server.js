@@ -60,7 +60,7 @@ app.get("/api/v1/monitor", (req, res) => {
     res.status(200).end();
 });
 
-app.use(authJwt());
+// app.use(authJwt());
 
 //routes
 const userRouter = require("./routes/user");
@@ -97,7 +97,7 @@ app.use("/api/v1/plan", planRouter); //test
 app.use("/api/v1/dashboard", dashboardRouter); //test
 app.use("/api/v1/notifications", notificationsRouter); //test
 
-app.usw("/api/v1/downloadModel",async(req,res)=>{
+app.use("/api/v1/downloadModel",async(req,res)=>{
     res.download(__dirname+"/assets/sum.tflite");
 }); //test
 
