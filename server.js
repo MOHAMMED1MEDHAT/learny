@@ -109,7 +109,7 @@ app.use("/api/v1/downloadModel",async(req,res)=>{
                 console.error('Error reading file:', err);
                 res.status(500).send('Error reading file');
             } else {
-                // res.setHeader('Content-Type', 'text/plain');
+                res.setHeader('Content-Type', 'text/plain');
                 res.send(data);
             }
         });
