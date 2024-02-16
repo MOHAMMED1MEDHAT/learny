@@ -98,7 +98,24 @@ app.use("/api/v1/dashboard", dashboardRouter); //test
 app.use("/api/v1/notifications", notificationsRouter); //test
 
 app.use("/api/v1/downloadModel",async(req,res)=>{
-    res.download(__dirname+"/assets/test/sum.tflite");
+    const filePath = path.join(__dirname, 'assets/test/sum.tflite');
+
+    // Check if the file exists
+    if (fs.existsSync(filePath)) {
+        // Read the file and send it as a response
+        fs.readFile(filePath, (err, data) => {
+            if (err) {
+                console.error('Error reading file:', err);
+                res.status(500).send('Error reading file');
+            } else {
+                // res.setHeader('Content-Type', 'text/plain');
+                res.send(data);
+            }
+        });
+    } else {
+        // If the file doesn't exist, return a 404 response
+        res.status(404).send('File not found');
+    }
 }); //test
 
 app.all("*", (req, res, next) => {
