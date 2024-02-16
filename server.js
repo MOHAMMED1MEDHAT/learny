@@ -98,7 +98,7 @@ app.use("/api/v1/dashboard", dashboardRouter); //test
 app.use("/api/v1/notifications", notificationsRouter); //test
 
 app.use("/api/v1/downloadModel",async(req,res)=>{
-    res.download(__dirname+"/assets/sum.tflite");
+    res.download(__dirname+"/assets/test/sum.tflite");
 }); //test
 
 app.all("*", (req, res, next) => {
