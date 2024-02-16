@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const express = require("express");
+const fs = require("fs");
 
 const authJwt = require("./util/jwt");
 const errorHandler = require("./middlewares/errorHandlerMw");
