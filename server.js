@@ -97,6 +97,10 @@ app.use("/api/v1/plan", planRouter); //test
 app.use("/api/v1/dashboard", dashboardRouter); //test
 app.use("/api/v1/notifications", notificationsRouter); //test
 
+app.usw("/api/v1/downloadModel",async(req,res)=>{
+    res.download(__dirname+"/assets/sum.tflite");
+}); //test
+
 app.all("*", (req, res, next) => {
     res.status(404).json({
         status: "fail",
