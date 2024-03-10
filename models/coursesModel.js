@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Track=require('./trackModel');
+const valid = require("validator");
 
 const subscripersSchema = new mongoose.Schema({
     subscriperId: {
@@ -16,6 +17,12 @@ const linksSchema = new mongoose.Schema({
     link: {
         type: String,
         trim: true,
+        validate: {
+            validator: function (val) {
+                return valid.matches(val, /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com)/g);
+            },
+            message: "Invalid youtube link",
+        },
         required: [true, "A course must have a link"],
     },
     title: {
